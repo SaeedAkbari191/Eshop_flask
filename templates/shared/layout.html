@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% include 'shared/header_references.html' %}
+    {% block extra_link %}
+
+    {% endblock %}
+
+    <title>{% block title %}Topoco{% endblock %}</title>
+</head>
+<body>
+
+{% include 'shared/site_header_component.html' %}
+
+{% block content %}{% endblock %}
+
+{% include 'shared/site_footer_component.html' %}
+
+{% include 'shared/footer_references.html' %}
+</body>
+</html>
