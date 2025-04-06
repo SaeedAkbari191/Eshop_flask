@@ -24,11 +24,16 @@ def create_app():
     from product_module.admin import ProductAdmin
     from contact_module.models import ContactUS
 
+    from account_module.models import User
+    from account_module.admin import UserAdmin
+
+
     admin.add_view(ProductAdmin(Product, db.session))
     admin.add_view(ModelView(ProductCategory, db.session))
     admin.add_view(ModelView(ProductBrand, db.session))
     admin.add_view(ModelView(ProductTag, db.session))
     admin.add_view(ModelView(ContactUS, db.session))
+    admin.add_view(UserAdmin(User, db.session))
     # admin.add_view(ModelView(product_category_association, db.session))
 
     from home_module.views import views

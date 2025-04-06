@@ -1,19 +1,23 @@
 import os
-
-from flask import Blueprint, render_template, session, send_from_directory, current_app
+from flask import Blueprint, request, render_template, session, send_from_directory, current_app
 from .models import Product
+from flask_sqlalchemy import pagination
 
 p_views = Blueprint('p_views', __name__, template_folder='templates')
 
 
 @p_views.route('/uploads/<path:filename>')
 def get_image(filename):
-    return send_from_directory(os.path.join(current_app.root_path,'static','uploads'), filename)
+    return send_from_directory(os.path.join(current_app.root_path, 'static', 'uploads'), filename)
 
 
 @p_views.route('/')
 def products():
-    products = Product.query.filter(Product.is_active == True).all()
+    page = request.args.get('page', 1, type=int)  # دریافت شماره صفحه
+    per_page = 1  # تعداد محصولات در هر صفحه
+
+    # صفحه‌بندی داده‌ها
+    products = Product.query.order_by(Product.price.desc()).paginate(page=page, per_page=per_page, error_out=False)
     return render_template('product_module/product_list.html', products=products)
 
 

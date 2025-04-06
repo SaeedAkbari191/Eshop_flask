@@ -152,11 +152,22 @@
 
             </div>
             <div class="pagination">
-                <span class="btn_page prev"><i class="fa-solid fa-backward-step"></i></span>
-                <a href="#"> <span class="num_page active">1</span></a>
-                <a href="#"> <span class="num_page">2</span></a>
-                <a href="#"> <span class="num_page">3</span></a>
-                <span class="btn_page next"><i class="fa-solid fa-forward-step"></i></span>
+                {% if products.has_prev %}
+                    <a href="?page={{ products.prev_num }}"><span class="btn_page prev"><i
+                            class="fa-solid fa-backward-step"></i></span></a>
+                {% endif %}
+
+                {% for pageNumber in range(1,products.pages + 1) %}
+                    <a href="?page={{ pageNumber }}">
+                        <span class="num_page {% if products.page==pageNumber %}active{% endif %}  ">{{ pageNumber }}</span>
+                    </a>
+                {% endfor %}
+
+                {% if products.has_next %}
+                    <a href="?page={{ products.next_num }}"><span class="btn_page next"><i
+                            class="fa-solid fa-forward-step"></i></span></a>
+
+                {% endif %}
             </div>
         </div>
     </section>

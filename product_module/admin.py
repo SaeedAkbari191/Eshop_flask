@@ -4,11 +4,9 @@ from flask_admin.contrib.sqla import ModelView
 from flask_admin.contrib.sqla.fields import QuerySelectField, QuerySelectMultipleField
 from flask_wtf.file import FileAllowed
 from slugify import slugify
-from sqlalchemy.sql.functions import count
 from werkzeug.utils import secure_filename
 from wtforms import FileField
 from .models import ProductCategory, ProductBrand, Product
-from extensions import db
 
 
 class ProductAdmin(ModelView):
