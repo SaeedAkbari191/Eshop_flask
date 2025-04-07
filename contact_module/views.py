@@ -10,7 +10,6 @@ contact_views = Blueprint('contact_views', __name__, template_folder='templates'
 def contact_view():
     form = ContactUsForm()
     if form.validate_on_submit():
-        print('dd')
         full_name = form.full_name.data
         email = form.email.data
         message = form.message.data

@@ -27,7 +27,6 @@ def create_app():
     from account_module.models import User
     from account_module.admin import UserAdmin
 
-
     admin.add_view(ProductAdmin(Product, db.session))
     admin.add_view(ModelView(ProductCategory, db.session))
     admin.add_view(ModelView(ProductBrand, db.session))
@@ -39,10 +38,12 @@ def create_app():
     from home_module.views import views
     from product_module.views import p_views
     from contact_module.views import contact_views
+    from account_module.views import account_views
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(p_views, url_prefix='/products')
     app.register_blueprint(contact_views, url_prefix='/contact-us')
+    app.register_blueprint(account_views, url_prefix='/')
 
     if not os.path.exists(UPLOAD_FOLDER):
         os.makedirs(UPLOAD_FOLDER)

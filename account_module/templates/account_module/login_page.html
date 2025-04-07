@@ -1,0 +1,38 @@
+{% extends 'shared/layout.html' %}
+
+{% block title %}
+    Login Page
+{% endblock %}
+
+{% block content %}
+    <section class="signin sec_form">
+        <div class="form_container">
+            <p class="title">Welcome back</p>
+
+            <form method="post" action="" class="form">
+
+
+                <input type="email" class="input" placeholder="Email">
+                <input type="password" class="input" placeholder="password">
+                <p class="page-link">
+                    <a href="#" class="page-link-label">Forgot Password?</a>
+                </p>
+
+                <button type="submit" class="form-btn">Login</button>
+
+            </form>
+
+            <p class="sign-up-label">
+                Don't have an account? <a href="" class="sign-up-link">sign up</a>
+            </p>
+
+
+            <div class="buttons-container">
+                <div class="google-login-button">
+                    <i class="fa-brands fa-google"></i>
+                    <span>Login with Google</span>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
