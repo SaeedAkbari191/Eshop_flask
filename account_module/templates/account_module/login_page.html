@@ -10,10 +10,22 @@
             <p class="title">Welcome back</p>
 
             <form method="post" action="" class="form">
+                {{ login_form.hidden_tag() }}
+
+                <div>
+                    {{ login_form.email }}
+                    {% for errors in login_form.email.errors %}
+                        <p class="errorlist"> {{ errors }}</p>
+                    {% endfor %}
+                </div>
+                <div>
+                    {{ login_form.password }}
+                    {% for errors in login_form.password.errors %}
+                        <p class="errorlist"> {{ errors }}</p>
+                    {% endfor %}
+                </div>
 
 
-                <input type="email" class="input" placeholder="Email">
-                <input type="password" class="input" placeholder="password">
                 <p class="page-link">
                     <a href="#" class="page-link-label">Forgot Password?</a>
                 </p>

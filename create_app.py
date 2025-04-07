@@ -3,7 +3,7 @@ import os
 from flask import Flask
 from flask_admin.contrib.sqla import ModelView
 
-from extensions import db, migrate, admin
+from extensions import db, migrate, admin, login_manager
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'uploads')
@@ -18,7 +18,12 @@ def create_app():
 
     db.init_app(app)
     migrate.init_app(app, db)
+
+    login_manager.init_app(app)
+    login_manager.login_view = 'account_views.login'
+    login_manager.login_message_category = 'info'
     admin.init_app(app)
+
 
     from product_module.models import Product, ProductCategory, ProductBrand, ProductTag
     from product_module.admin import ProductAdmin

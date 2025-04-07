@@ -55,3 +55,28 @@ class RegisterForm(FlaskForm):
             'class': 'form-btn'
         }
     )
+
+
+class LoginForm(FlaskForm):
+    email = StringField(
+        '',
+        validators=[
+            DataRequired(message='Please enter your email'),
+            Email(),
+            Length(max=200, message='Email cannot be longer than 200 characters')
+        ],
+        render_kw={
+            'class': 'form input',
+            "placeholder": "Email"
+        })
+    password = PasswordField(
+        '',
+        validators=[
+            DataRequired(),
+            Length(max=100)
+        ],
+        render_kw={
+            'class': 'form input',
+            "placeholder": "Password"
+        }
+    )

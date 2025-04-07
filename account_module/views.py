@@ -1,11 +1,13 @@
 import random
 import string
 
-from flask import Blueprint, render_template, redirect, url_for, flash
+from flask import Blueprint, render_template, redirect, url_for, flash, abort, request
+from flask_login import login_user
+from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
 
 from extensions import db
-from .forms import RegisterForm
+from .forms import RegisterForm, LoginForm
 from .models import User
 
 account_views = Blueprint('account_views', __name__, template_folder='templates')
@@ -44,4 +46,38 @@ def register_view():
 
 @account_views.route('login/', methods=['GET', 'POST'])
 def login():
-    return render_template('account_module/login_page.html')
+    form = LoginForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        user_email = form.email.data
+        user_password = form.password.data
+
+        user = User.query.filter(User.email.ilike(user_email)).first()
+        if user:
+            if not user.is_active:
+                flash('User is not active', 'warning')
+            else:
+                correct_password = check_password_hash(user.password, user_password)
+                if correct_password:
+                    login_user(user)
+                    return redirect(url_for('views.home'))
+                else:
+                    flash('Incorrect email or password', 'danger')
+    else:
+        flash('Email does not exist', 'danger')
+    return render_template('account_module/login_page.html', login_form=form)
+
+
+@account_views.route('/activate-account/<string:email_active_code>')
+def activate_account(email_active_code):
+    user = User.query.filter_by(email_active_code=email_active_code).first()
+    if user:
+        if not user.is_active:
+            user.is_active = True
+            user.email_active_code = get_random_string()
+            db.session.commit()
+            flash('Account activated successfully.', 'success')
+            return redirect(url_for('account_views.login'))
+        else:
+            flash('Account already activated.', 'info')
+            return redirect(url_for('account_views.login'))
+    abort(404)

@@ -1,9 +1,10 @@
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from extensions import db
+from flask_login import UserMixin
 
 
-class User(db.Model):
+class User(db.Model,UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
@@ -30,6 +31,9 @@ class User(db.Model):
 
     def get_full_name(self):
         return f"{self.first_name} {self.last_name}"
+
+    def get_id(self):
+        return str(self.id)
 
     def is_admin(self):
         return self.is_superuser
