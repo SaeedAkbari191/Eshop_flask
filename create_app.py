@@ -20,7 +20,7 @@ def create_app():
     migrate.init_app(app, db)
 
     login_manager.init_app(app)
-    login_manager.login_view = 'account_views.login'
+    login_manager.login_view = 'account_views.login_view'
     login_manager.login_message_category = 'info'
     admin.init_app(app)
 

@@ -1,14 +1,12 @@
 import random
 import string
-
 from flask import Blueprint, render_template, redirect, url_for, flash, abort, request
-from flask_login import login_user
-from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
-
+from flask_login import login_user
 from extensions import db
 from .forms import RegisterForm, LoginForm
 from .models import User
+from werkzeug.security import check_password_hash
 
 account_views = Blueprint('account_views', __name__, template_folder='templates')
 
@@ -40,12 +38,12 @@ def register_view():
             db.session.add(new_user)
             db.session.commit()
             flash('Account created! Please check your email to activate.', 'success')
-            return redirect(url_for('account_views.login'))  # یا نام ویو صفحه لاگین
+            return redirect(url_for('account_views.login_view'))  # یا نام ویو صفحه لاگین
     return render_template('account_module/register_page.html', register_form=form)
 
 
 @account_views.route('login/', methods=['GET', 'POST'])
-def login():
+def login_view():
     form = LoginForm()
     if request.method == 'POST' and form.validate_on_submit():
         user_email = form.email.data
@@ -76,7 +74,7 @@ def activate_account(email_active_code):
             user.email_active_code = get_random_string()
             db.session.commit()
             flash('Account activated successfully.', 'success')
-            return redirect(url_for('account_views.login'))
+            return redirect(url_for('account_views.login_view'))
         else:
             flash('Account already activated.', 'info')
             return redirect(url_for('account_views.login'))
