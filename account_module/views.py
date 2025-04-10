@@ -1,12 +1,13 @@
 import random
 import string
-from flask import Blueprint, render_template, redirect, url_for, flash, abort, request
-from werkzeug.security import generate_password_hash
-from flask_login import login_user
-from extensions import db
-from .forms import RegisterForm, LoginForm
-from .models import User
+from flask import Blueprint, redirect, url_for, render_template, flash, abort, request, session
+from flask_login import login_user, logout_user
 from werkzeug.security import check_password_hash
+from werkzeug.security import generate_password_hash
+from extensions import db
+from utils.email_service import send_email
+from .forms import RegisterForm, LoginForm, ForgetPasswordForm
+from .models import User
 
 account_views = Blueprint('account_views', __name__, template_folder='templates')
 
@@ -37,7 +38,9 @@ def register_view():
             new_user.password = generate_password_hash(password)
             db.session.add(new_user)
             db.session.commit()
+            send_email(' Activate Your Account ', new_user.email, {'user': new_user}, 'emails/activate_account.html')
             flash('Account created! Please check your email to activate.', 'success')
+            # todo: send email active code
             return redirect(url_for('account_views.login_view'))  # یا نام ویو صفحه لاگین
     return render_template('account_module/register_page.html', register_form=form)
 
@@ -79,3 +82,27 @@ def activate_account(email_active_code):
             flash('Account already activated.', 'info')
             return redirect(url_for('account_views.login'))
     abort(404)
+
+
+@account_views.route('/forget-pass/', methods=['GET', 'POST'])
+def forgot_password_view():
+    form = ForgetPasswordForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        user_email = form.email.data
+        user = User.query.filter_by(email=user_email).first()
+        if user:
+            send_email(
+                ' Reset Password',
+                user.email,
+                {'user': user},
+                'emails/forgot_password.html'
+            )
+            return redirect(url_for('views.home'))
+    return render_template('account_module/Forgot_password.html', forget_password_form=form)
+
+
+@account_views.route('/logout', methods=['GET'])
+def logout_view():
+    logout_user()
+    session.clear()
+    return redirect(url_for('account_views.login_view'))

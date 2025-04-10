@@ -80,3 +80,18 @@ class LoginForm(FlaskForm):
             "placeholder": "Password"
         }
     )
+
+
+class ForgetPasswordForm(FlaskForm):
+    email = StringField(
+        '',
+        render_kw={
+            'class': 'form input',
+            'placeholder': 'Email'
+        },
+        validators=[
+            DataRequired(),
+            Email(),
+            Length(max=100)
+        ]
+    )

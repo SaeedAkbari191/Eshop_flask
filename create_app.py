@@ -1,9 +1,8 @@
 import os
-
 from flask import Flask
 from flask_admin.contrib.sqla import ModelView
-
 from extensions import db, migrate, admin, login_manager
+from extensions import mail
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'uploads')
@@ -16,14 +15,22 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+    app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+    app.config['MAIL_PORT'] = 587
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_DEFAULT_SENDER'] = 'm.saeedakbari559728@gmail.com'
+    app.config['MAIL_USERNAME'] = 'm.saeedakbari559728@gmail.com'
+    app.config['MAIL_PASSWORD'] = 'cpnw wexj hicw flqy'
+
+
     db.init_app(app)
     migrate.init_app(app, db)
+    mail.init_app(app)
 
     login_manager.init_app(app)
     login_manager.login_view = 'account_views.login_view'
     login_manager.login_message_category = 'info'
     admin.init_app(app)
-
 
     from product_module.models import Product, ProductCategory, ProductBrand, ProductTag
     from product_module.admin import ProductAdmin
