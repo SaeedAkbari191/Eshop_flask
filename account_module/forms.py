@@ -95,3 +95,28 @@ class ForgetPasswordForm(FlaskForm):
             Length(max=100)
         ]
     )
+
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField(
+        '',
+        validators=[
+            DataRequired(),
+            Length(max=100)
+        ],
+        render_kw={
+            'class': 'form input',
+            "placeholder": "Password"
+        }
+    )
+    confirm_password = PasswordField(
+        '',
+        validators=[
+            DataRequired(),
+            EqualTo('password', message='Passwords do not match')
+        ],
+        render_kw={
+            'class': 'form input',
+            "placeholder": "Confirm Password"
+        }
+    )

@@ -6,7 +6,7 @@ from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
 from extensions import db
 from utils.email_service import send_email
-from .forms import RegisterForm, LoginForm, ForgetPasswordForm
+from .forms import RegisterForm, LoginForm, ForgetPasswordForm, ResetPasswordForm
 from .models import User
 
 account_views = Blueprint('account_views', __name__, template_folder='templates')
@@ -80,25 +80,44 @@ def activate_account(email_active_code):
             return redirect(url_for('account_views.login_view'))
         else:
             flash('Account already activated.', 'info')
-            return redirect(url_for('account_views.login'))
+            return redirect(url_for('account_views.login_view'))
     abort(404)
 
 
-@account_views.route('/forget-pass/', methods=['GET', 'POST'])
+@account_views.route('forget-pass/', methods=['GET', 'POST'])
 def forgot_password_view():
     form = ForgetPasswordForm()
     if request.method == 'POST' and form.validate_on_submit():
+        print('test')
         user_email = form.email.data
-        user = User.query.filter_by(email=user_email).first()
-        if user:
-            send_email(
-                ' Reset Password',
-                user.email,
-                {'user': user},
-                'emails/forgot_password.html'
-            )
+        user = User.query.filter(User.email.ilike(user_email)).first()
+        if user is not None:
+            print('test')
+            send_email(subject='Reset Password', to=user.email, context={'user': user},
+                       template='emails/forgot_password.html')
+
             return redirect(url_for('views.home'))
-    return render_template('account_module/Forgot_password.html', forget_password_form=form)
+    return render_template('account_module/forgot_password.html', forget_password_form=form)
+
+
+@account_views.route('reset-pass/<active_code>', methods=['GET', 'POST'])
+def reset_password(active_code):
+    user = User.query.filter_by(email_active_code=active_code).first()
+    if user is None:
+        return redirect(url_for('account_views.login_view'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        password = form.password.data
+        confirm_password = form.confirm_password.data
+
+        if password == confirm_password:
+            user.password = generate_password_hash(password)
+            user.email_active_code = get_random_string(72)
+            user.is_active = True
+            db.session.commit()
+            return redirect(url_for('account_views.login_view'))
+
+    return render_template('account_module/reset_password.html', reset_password_form=form, user=user)
 
 
 @account_views.route('/logout', methods=['GET'])
