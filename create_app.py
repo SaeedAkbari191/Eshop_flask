@@ -3,6 +3,7 @@ from flask import Flask
 from flask_admin.contrib.sqla import ModelView
 from extensions import db, migrate, admin, login_manager
 from extensions import mail
+from site_module.models import SiteSetting
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'uploads')
@@ -14,13 +15,18 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:12345@localhost/flaskecommerceproject'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
     app.config['MAIL_SERVER'] = 'smtp.gmail.com'
     app.config['MAIL_PORT'] = 587
     app.config['MAIL_USE_TLS'] = True
     app.config['MAIL_DEFAULT_SENDER'] = 'm.saeedakbari559728@gmail.com'
     app.config['MAIL_USERNAME'] = 'm.saeedakbari559728@gmail.com'
     app.config['MAIL_PASSWORD'] = 'cpnw wexj hicw flqy'
+
+    @app.context_processor
+    def inject_site_settings():
+        from extensions import db
+        site_setting = SiteSetting.query.filter_by(is_main_setting=True).first()
+        return dict(site_setting=site_setting)
 
     db.init_app(app)
     migrate.init_app(app, db)
@@ -38,8 +44,8 @@ def create_app():
     from account_module.models import User
     from account_module.admin import UserAdmin
 
-    from site_module.models import SiteSetting
-    from site_module.admin import SiteSettingAdmin
+    from site_module.models import SiteSetting, Slider
+    from site_module.admin import SiteSettingAdmin, SliderAdmin
 
     admin.add_view(ProductAdmin(Product, db.session))
     admin.add_view(ModelView(ProductCategory, db.session))
@@ -48,6 +54,7 @@ def create_app():
     admin.add_view(ModelView(ContactUS, db.session))
     admin.add_view(UserAdmin(User, db.session))
     admin.add_view(SiteSettingAdmin(SiteSetting, db.session))
+    admin.add_view(SliderAdmin(Slider, db.session))
     # admin.add_view(ModelView(product_category_association, db.session))
 
     from home_module.views import views

@@ -29,10 +29,9 @@ def products():
 @p_views.route("<string:slug>")
 def product_detail(slug):
     products = Product.query.filter_by(slug=slug).first_or_404()
-    site_setting = SiteSetting.query.filter_by(is_main_setting=True).first_or_404()
 
     favorite_product_id = session.get('ProductFavorite')
     is_favorite = favorite_product_id == str(products.id)
 
-    return render_template('product_module/product_details.html', products=products, site_setting=site_setting,
+    return render_template('product_module/product_details.html', products=products,
                            )

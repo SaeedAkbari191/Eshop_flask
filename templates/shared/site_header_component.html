@@ -1,6 +1,7 @@
 <header>
     <div class="containeres top-nav">
-        <a href="index.html" class="logo"><img src="/static/img/logo-black.png" alt=""></a>
+        <a href="index.html" class="logo"><img src="{{ url_for('setting_views.get_image',filename=site_setting.site_logo) }}"
+                                               alt=""></a>
         <form action="" class="search">
             <input type="search" placeholder="Search for products...">
             <button type="submit">Search</button>
@@ -33,7 +34,8 @@
             </ul>
 
             <div class="loging_signup">
-                <a href="{{ url_for('account_views.login_view') }}">login <i class="fa-solid fa-right-to-bracket"></i></a>
+                <a href="{{ url_for('account_views.login_view') }}">login <i
+                        class="fa-solid fa-right-to-bracket"></i></a>
                 <a href="{{ url_for('account_views.register_view') }}" style="text-decoration: none">sign up <i
                         class="fa-solid fa-user-plus"></i></a>
             </div>

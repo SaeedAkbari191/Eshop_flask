@@ -23,17 +23,20 @@
             <!-- Swiper -->
             <div class="slide-swp mySwiper">
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <a href="#"><img src="/static/img/slider-01.jpg" alt=""></a>
-                    </div>
+                    {% for slider in sliders %}
+                        <div class="swiper-slide">
+                            <a href="#"><img src="{{ url_for('p_views.get_image',filename=slider.image) }}" alt=""></a>
+                        </div>
+                    {% endfor %}
 
+                    {#
                     <div class="swiper-slide">
                         <a href="#"><img src="/static/img/slider-02.jpg" alt=""></a>
                     </div>
 
                     <div class="swiper-slide">
                         <a href="#"><img src="/static/img/slider-03.jpg" alt=""></a>
-                    </div>
+                    </div>#}
 
                 </div>
                 <div class="swiper-pagination"></div>
