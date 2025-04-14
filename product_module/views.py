@@ -1,6 +1,7 @@
 import os
 from flask import Blueprint, request, render_template, session, send_from_directory, current_app
 from .models import Product
+from site_module.models import SiteSetting
 from flask_sqlalchemy import pagination
 
 p_views = Blueprint('p_views', __name__, template_folder='templates')
@@ -28,8 +29,10 @@ def products():
 @p_views.route("<string:slug>")
 def product_detail(slug):
     products = Product.query.filter_by(slug=slug).first_or_404()
+    site_setting = SiteSetting.query.filter_by(is_main_setting=True).first_or_404()
 
     favorite_product_id = session.get('ProductFavorite')
     is_favorite = favorite_product_id == str(products.id)
 
-    return render_template('product_module/product_details.html', products=products, )
+    return render_template('product_module/product_details.html', products=products, site_setting=site_setting,
+                           )

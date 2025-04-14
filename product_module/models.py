@@ -69,3 +69,4 @@ class ProductTag(db.Model):
 
     def str(self):
         return self.caption
+

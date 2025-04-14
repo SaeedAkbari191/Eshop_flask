@@ -11,7 +11,7 @@ class SiteSetting(db.Model):
     email = db.Column(db.String(100), nullable=True)
     copy_right = db.Column(db.String(100), nullable=False)
     about_us_text = db.Column(db.Text, nullable=False)
-    site_logo = db.Column(db.String(200), nullable=False)  # مسیر فایل آپلود شده
+    site_logo = db.Column(db.String(200), nullable=False)
     is_main_setting = db.Column(db.Boolean, default=False)
 
     def __str__(self):
@@ -30,7 +30,7 @@ class FooterLink(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     url = db.Column(db.String(400), nullable=False)
-    footer_link_box_id = db.Column(db.Integer, db.ForeignKey('footer_link_boxes.id'), nullable=False)
+    footer_link_box_id = db.Column(db.Integer, db.ForeignKey('footer_link_box.id'), nullable=False)
     footer_link_box = db.relationship('FooterLinkBox', backref=db.backref('footer_links', lazy=True))
 
     def __str__(self):

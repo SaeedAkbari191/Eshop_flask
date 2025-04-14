@@ -22,7 +22,6 @@ def create_app():
     app.config['MAIL_USERNAME'] = 'm.saeedakbari559728@gmail.com'
     app.config['MAIL_PASSWORD'] = 'cpnw wexj hicw flqy'
 
-
     db.init_app(app)
     migrate.init_app(app, db)
     mail.init_app(app)
@@ -39,23 +38,29 @@ def create_app():
     from account_module.models import User
     from account_module.admin import UserAdmin
 
+    from site_module.models import SiteSetting
+    from site_module.admin import SiteSettingAdmin
+
     admin.add_view(ProductAdmin(Product, db.session))
     admin.add_view(ModelView(ProductCategory, db.session))
     admin.add_view(ModelView(ProductBrand, db.session))
     admin.add_view(ModelView(ProductTag, db.session))
     admin.add_view(ModelView(ContactUS, db.session))
     admin.add_view(UserAdmin(User, db.session))
+    admin.add_view(SiteSettingAdmin(SiteSetting, db.session))
     # admin.add_view(ModelView(product_category_association, db.session))
 
     from home_module.views import views
     from product_module.views import p_views
     from contact_module.views import contact_views
     from account_module.views import account_views
+    from site_module.views import setting_views
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(p_views, url_prefix='/products')
     app.register_blueprint(contact_views, url_prefix='/contact-us')
     app.register_blueprint(account_views, url_prefix='/')
+    app.register_blueprint(setting_views, url_prefix='/')
 
     if not os.path.exists(UPLOAD_FOLDER):
         os.makedirs(UPLOAD_FOLDER)
