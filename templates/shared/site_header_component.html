@@ -1,7 +1,8 @@
 <header>
     <div class="containeres top-nav">
-        <a href="index.html" class="logo"><img src="{{ url_for('setting_views.get_image',filename=site_setting.site_logo) }}"
-                                               alt=""></a>
+        <a href="{{ url_for('views.home') }}" class="logo"><img
+                src="{{ url_for('setting_views.get_image',filename=site_setting.site_logo) }}"
+                alt=""></a>
         <form action="" class="search">
             <input type="search" placeholder="Search for products...">
             <button type="submit">Search</button>
@@ -27,18 +28,25 @@
                 <i onclick="close_menu()" class="fa-regular fa-circle-xmark btn_close_menu"></i>
                 <img class="logo_menu" src="img/logo-black.png" alt="">
 
-                <li class="active"><a href="index.html" style="text-decoration: none">home</a></li>
+                <li class="active"><a href="{{ url_for('views.home') }}" style="text-decoration: none">home</a></li>
                 <li><a href="{{ url_for("p_views.products") }}" style="text-decoration: none">all products</a></li>
-                <li><a href="" style="text-decoration: none">about us</a></li>
+                <li><a href="{{ url_for('views.about_us_page') }}" style="text-decoration: none">about us</a></li>
                 <li><a href="{{ url_for("contact_views.contact_view") }}" style="text-decoration: none">contact</a></li>
             </ul>
+            {% if current_user.is_authenticated %}
+                <div class="loging_signup">
+                    <a href="{{ url_for('account_views.logout_view') }}">Logout <i class="fa-solid fa-sign-out"></i></a>
+                    <a href="" style="text-decoration: none">User Panel <i class="fa-solid fa-user-plus"></i></a>
+                </div>
+            {% else %}
+                <div class="loging_signup">
+                    <a href="{{ url_for('account_views.login_view') }}">login <i
+                            class="fa-solid fa-right-to-bracket"></i></a>
+                    <a href="{{ url_for('account_views.register_view') }}" style="text-decoration: none">sign up <i
+                            class="fa-solid fa-user-plus"></i></a>
+                </div>
 
-            <div class="loging_signup">
-                <a href="{{ url_for('account_views.login_view') }}">login <i
-                        class="fa-solid fa-right-to-bracket"></i></a>
-                <a href="{{ url_for('account_views.register_view') }}" style="text-decoration: none">sign up <i
-                        class="fa-solid fa-user-plus"></i></a>
-            </div>
+            {% endif %}
         </div>
     </nav>
 </header>

@@ -9,3 +9,9 @@ views = Blueprint('views', __name__, template_folder='templates/home_module')
 def home():
     slider = Slider.query.filter_by(is_active=True)
     return render_template('index_page.html', sliders=slider, )
+
+
+@views.route('/about-us')
+def about_us_page():
+    site_setting = SiteSetting.query.filter_by(is_main_setting=True).first()
+    return render_template('about_us.html', site_setting=site_setting)

@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash
 from .forms import ContactUsForm
 from .models import ContactUS
 from extensions import db
+from site_module.models import SiteSetting
 
 contact_views = Blueprint('contact_views', __name__, template_folder='templates')
 
@@ -19,4 +20,5 @@ def contact_view():
         db.session.commit()
         flash("your Message has been sent successfully!", "success")
         return redirect(url_for('contact_views.contact_view'))
-    return render_template('contact_module/contact_us_page.html', form=form)
+    site_setting = SiteSetting.query.filter_by(is_main_setting=True).first()
+    return render_template('contact_module/contact_us_page.html', form=form, site_setting=site_setting)
