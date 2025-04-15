@@ -1,9 +1,11 @@
 import os
 from flask import current_app, request
 from flask_admin.contrib.sqla import ModelView
+from flask_admin.contrib.sqla.fields import QuerySelectField
 from flask_wtf.file import FileAllowed
 from werkzeug.utils import secure_filename
 from wtforms import FileField
+from .models import FooterLink, FooterLinkBox
 
 
 class SiteSettingAdmin(ModelView):
@@ -48,3 +50,10 @@ class SliderAdmin(ModelView):
             # ذخیره مسیر نسبی فایل در دیتابیس
             model.image = f'{folder_name}/{filename}'
         return super().on_model_change(form, model, is_created)
+
+
+class FooterLinkAdmin(ModelView):
+    form_extra_fields = {
+        'footer_link_box': QuerySelectField('Footer Link Box', query_factory=lambda: FooterLinkBox.query.all(),
+                                            get_label='title'),
+    }

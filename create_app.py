@@ -4,7 +4,6 @@ from flask import Flask
 from flask_admin.contrib.sqla import ModelView
 
 from extensions import db, migrate, admin, login_manager, mail, thumb
-from flask_thumbnails import thumbnail
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'uploads')
@@ -31,9 +30,9 @@ def create_app():
     @app.context_processor
     def inject_site_settings():
         site_setting = SiteSetting.query.filter_by(is_main_setting=True).first()
-        from flask_resize import Resize
+        footer_link_boxes = FooterLinkBox.query.all()
 
-        return dict(site_setting=site_setting, resize=Resize)
+        return dict(site_setting=site_setting, footer_link_boxes=footer_link_boxes)
 
     db.init_app(app)
     migrate.init_app(app, db)
@@ -51,8 +50,8 @@ def create_app():
     from account_module.models import User
     from account_module.admin import UserAdmin
 
-    from site_module.models import SiteSetting, Slider
-    from site_module.admin import SiteSettingAdmin, SliderAdmin
+    from site_module.models import SiteSetting, Slider, FooterLink, FooterLinkBox
+    from site_module.admin import SiteSettingAdmin, SliderAdmin, FooterLinkAdmin
 
     admin.add_view(ProductAdmin(Product, db.session))
     admin.add_view(ModelView(ProductCategory, db.session))
@@ -62,6 +61,8 @@ def create_app():
     admin.add_view(UserAdmin(User, db.session))
     admin.add_view(SiteSettingAdmin(SiteSetting, db.session))
     admin.add_view(SliderAdmin(Slider, db.session))
+    admin.add_view(FooterLinkAdmin(FooterLink, db.session))
+    admin.add_view(ModelView(FooterLinkBox, db.session))
     # admin.add_view(ModelView(product_category_association, db.session))
 
     from home_module.views import views
@@ -78,6 +79,5 @@ def create_app():
 
     if not os.path.exists(UPLOAD_FOLDER):
         os.makedirs(UPLOAD_FOLDER)
-
 
     return app
