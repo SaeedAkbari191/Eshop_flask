@@ -1,9 +1,10 @@
 import os
+
 from flask import Flask
 from flask_admin.contrib.sqla import ModelView
-from extensions import db, migrate, admin, login_manager
-from extensions import mail
-from site_module.models import SiteSetting
+
+from extensions import db, migrate, admin, login_manager, mail, thumb
+from flask_thumbnails import thumbnail
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'uploads')
@@ -15,6 +16,8 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:12345@localhost/flaskecommerceproject'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+    # EMAIL CONFIG
     app.config['MAIL_SERVER'] = 'smtp.gmail.com'
     app.config['MAIL_PORT'] = 587
     app.config['MAIL_USE_TLS'] = True
@@ -22,16 +25,20 @@ def create_app():
     app.config['MAIL_USERNAME'] = 'm.saeedakbari559728@gmail.com'
     app.config['MAIL_PASSWORD'] = 'cpnw wexj hicw flqy'
 
+    app.config['THUMBNAIL_MEDIA_ROOT'] = 'static/uploads'
+    app.config['THUMBNAIL_MEDIA_THUMBNAIL_ROOT'] = 'static/uploads/thumbnails'
+
     @app.context_processor
     def inject_site_settings():
-        from extensions import db
         site_setting = SiteSetting.query.filter_by(is_main_setting=True).first()
-        return dict(site_setting=site_setting)
+        from flask_resize import Resize
+
+        return dict(site_setting=site_setting, resize=Resize)
 
     db.init_app(app)
     migrate.init_app(app, db)
     mail.init_app(app)
-
+    thumb.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = 'account_views.login_view'
     login_manager.login_message_category = 'info'
@@ -71,4 +78,6 @@ def create_app():
 
     if not os.path.exists(UPLOAD_FOLDER):
         os.makedirs(UPLOAD_FOLDER)
+
+
     return app
