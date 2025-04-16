@@ -44,7 +44,7 @@ def create_app():
     admin.init_app(app)
 
     from product_module.models import Product, ProductCategory, ProductBrand, ProductTag
-    from product_module.admin import ProductAdmin
+    from product_module.admin import ProductAdmin, ProductCategoryAdmin
     from contact_module.models import ContactUS
 
     from account_module.models import User
@@ -54,7 +54,7 @@ def create_app():
     from site_module.admin import SiteSettingAdmin, SliderAdmin, FooterLinkAdmin
 
     admin.add_view(ProductAdmin(Product, db.session))
-    admin.add_view(ModelView(ProductCategory, db.session))
+    admin.add_view(ProductCategoryAdmin(ProductCategory, db.session))
     admin.add_view(ModelView(ProductBrand, db.session))
     admin.add_view(ModelView(ProductTag, db.session))
     admin.add_view(ModelView(ContactUS, db.session))

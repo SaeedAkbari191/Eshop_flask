@@ -51,3 +51,10 @@ class ProductAdmin(ModelView):
             # ذخیره مسیر نسبی فایل در دیتابیس
             model.image2 = filename2
         return super().on_model_change(form, model, is_created)
+
+
+class ProductCategoryAdmin(ModelView):
+    form_extra_fields = {
+        'parent': QuerySelectField('parent', query_factory=lambda: ProductCategory.query.all(), allow_blank=True,
+                                   get_label='title'),
+    }

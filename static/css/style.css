@@ -1304,7 +1304,67 @@ header .links ul .btn_close_menu {
 
 
 /* all products page */
+.categories {
+    width: 100%;
+    font-family: sans-serif;
+}
 
+.category {
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+}
+
+.category-title {
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 5px 10px;
+    transition: background-color 0.3s;
+}
+
+.category-title:hover {
+    background-color: #f8f8f8;
+}
+
+.subcategory-list {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    padding-left: 20px;
+    margin: 0;
+}
+
+.subcategory-list.open {
+    max-height: 500px;
+}
+
+.subcategory-list li {
+    list-style: none;
+    padding: 5px 0;
+}
+
+.subcategory-list a {
+    text-decoration: none;
+    color: var(--dark-color);
+    font-size: 14px;
+}
+
+.no-sub a {
+    text-decoration: none;
+    color: var(--dark-color);
+    font-size: 14px;
+}
+
+.arrow {
+    transition: transform 0.3s ease;
+}
+
+.arrow.rotate {
+    transform: rotate(90deg);
+}
+
+/*END OF FILTER*/
 .top_page {
     text-align: center;
     padding: 50px 0;
