@@ -12,6 +12,8 @@ product_category_association = db.Table(
 
 class ProductCategory(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey('product_category.id'), nullable=True)
+    parent = db.relationship('ProductCategory', remote_side=[id], backref='subcategories', lazy=True)
     title = db.Column(db.String(300), nullable=False, index=True)
     url_title = db.Column(db.String(300), nullable=False, index=True)
     is_active = db.Column(db.Boolean, default=True)
@@ -69,4 +71,3 @@ class ProductTag(db.Model):
 
     def str(self):
         return self.caption
-

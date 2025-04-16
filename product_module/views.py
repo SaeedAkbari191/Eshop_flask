@@ -3,8 +3,9 @@ from io import BytesIO
 
 from PIL import Image, ImageOps
 from flask import Blueprint, request, render_template, session, current_app, send_file, abort
+from unicodedata import category
 
-from .models import Product
+from .models import Product, ProductCategory
 
 p_views = Blueprint('p_views', __name__, template_folder='templates')
 
@@ -35,18 +36,46 @@ def get_image(filename):
 
 
 @p_views.route('/')
-def products():
-    page = request.args.get('page', 1, type=int)  # دریافت شماره صفحه
-    per_page = 2  # تعداد محصولات در هر صفحه
+@p_views.route('/cat/<string:category>')
+def product_list(category=None):
+    page = request.args.get('page', 1, type=int)
+    per_page = 1
 
-    # صفحه‌بندی داده‌ها
-    products = Product.query.order_by(Product.price.desc()).paginate(page=page, per_page=per_page, error_out=False)
-    return render_template('product_module/product_list.html', products=products)
+    query = Product.query.order_by(Product.price.desc())
+
+    if category:
+        query = query.join(Product.category).filter(ProductCategory.url_title.ilike(category))
+
+    products = query.paginate(page=page, per_page=per_page, error_out=False)
+
+    # فقط وقتی این ویو رندر میشه، دسته‌بندی‌ها هم پاس داده میشن
+    main_categories = ProductCategory.query.filter_by(is_active=True, parent_id=None).all()
+
+    return render_template('product_module/product_list.html',
+                           products=products,
+                           main_categories=main_categories,
+                           selected_category=category)
 
 
-# @view.route('product-details/')
-# def product_details():
-#     return render_template('product_module/product_details.html')
+# @p_views.route('/')
+# @p_views.route('/cat/<string:category>')
+# def product_list(category=None):
+#     page = request.args.get('page', 1, type=int)
+#     query = Product.query.order_by(Product.price.desc()).paginate(page=page, per_page=1, error_out=False)
+#
+#     if category:
+#         query = query.join(ProductCategory).filter(ProductCategory.url_title.ilike(category))
+#
+#
+#     main_categories = ProductCategory.query.filter_by(is_active=True, parent_id=None).all()
+#
+#     return render_template(
+#         'product_module/product_list.html',
+#         products=query,
+#
+#         main_categories=main_categories  # این اضافه میشه
+#     )
+
 
 @p_views.route("<string:slug>")
 def product_detail(slug):

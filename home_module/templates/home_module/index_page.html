@@ -25,7 +25,7 @@
                 <div class="swiper-wrapper">
                     {% for slider in sliders %}
                         <div class="swiper-slide">
-                            <a href="#"><img src="{{ url_for('p_views.get_image',filename=slider.image) }}" alt=""></a>
+                            <a href="#"><img src="{{ url_for('setting_views.get_image',filename=slider.image) }}" alt=""></a>
                         </div>
                     {% endfor %}
 

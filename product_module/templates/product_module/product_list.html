@@ -23,43 +23,30 @@
             <div class="filter">
                 <h2>filter</h2>
 
-                <div class="filter_item">
-                    <h4>categorie</h4>
-                    <div class="content">
-
-                        <div class="item">
-                            <span>Phones</span>
-                            <input type="checkbox">
+                <div class="categories filter_item">
+                    <h4>categories</h4>
+                    {% for main_category in main_categories %}
+                        <div class="category">
+                            {% if main_category.subcategories %}
+                                <div class="category-title" onclick="toggleExclusive(this)">
+                                    <span>{{ main_category.title }}</span>
+                                    <span class="arrow">&#9654;</span>
+                                </div>
+                                <ul class="subcategory-list">
+                                    {% for sub in main_category.subcategories %}
+                                        <li>
+                                            <a href=" {{ url_for('p_views.product_list',category=sub.url_title) }}">{{ sub.title }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <div class="category-title no-sub">
+                                    <a href="
+                                            {{ url_for('p_views.product_list',category=main_category.url_title) }}">{{ main_category.title }}</a>
+                                </div>
+                            {% endif %}
                         </div>
-
-                        <div class="item">
-                            <span>Tablets</span>
-                            <input type="checkbox">
-                        </div>
-
-
-                        <div class="item">
-                            <span>Electronics</span>
-                            <input type="checkbox">
-                        </div>
-
-
-                        <div class="item">
-                            <span>TV</span>
-                            <input type="checkbox">
-                        </div>
-
-                        <div class="item">
-                            <span>Fashion</span>
-                            <input type="checkbox">
-                        </div>
-
-                        <div class="item">
-                            <span>Watches</span>
-                            <input type="checkbox">
-                        </div>
-
-                    </div>
+                    {% endfor %}
                 </div>
 
 
