@@ -1,11 +1,19 @@
 import os
-from flask import current_app, request
+from flask import current_app, request, abort, render_template
+from flask_admin import AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
-from flask_admin.contrib.sqla.fields import QuerySelectField, QuerySelectMultipleField
+from flask_login import current_user
 from flask_wtf.file import FileAllowed
-from slugify import slugify
 from werkzeug.utils import secure_filename
 from wtforms import FileField
+
+
+class SuperUserOnlyAdminView(AdminIndexView):
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.is_superuser
+
+    def inaccessible_callback(self, name, **kwargs):
+        return render_template('account_module/forbidden.html'), 404
 
 
 class UserAdmin(ModelView):

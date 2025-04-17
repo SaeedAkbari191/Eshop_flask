@@ -3,6 +3,7 @@ from io import BytesIO
 
 from PIL import Image, ImageOps
 from flask import Blueprint, request, render_template, session, current_app, send_file, abort
+from sqlalchemy.orm import subqueryload
 from unicodedata import category
 
 from .models import Product, ProductCategory
@@ -49,7 +50,7 @@ def product_list(category=None):
     products = query.paginate(page=page, per_page=per_page, error_out=False)
 
     # فقط وقتی این ویو رندر میشه، دسته‌بندی‌ها هم پاس داده میشن
-    main_categories = ProductCategory.query.filter_by(is_active=True, parent_id=None).all()
+    main_categories = ProductCategory.query.options(subqueryload(ProductCategory.parent)).filter_by(is_active=True, parent_id=None).all()
 
     return render_template('product_module/product_list.html',
                            products=products,
@@ -57,24 +58,7 @@ def product_list(category=None):
                            selected_category=category)
 
 
-# @p_views.route('/')
-# @p_views.route('/cat/<string:category>')
-# def product_list(category=None):
-#     page = request.args.get('page', 1, type=int)
-#     query = Product.query.order_by(Product.price.desc()).paginate(page=page, per_page=1, error_out=False)
 #
-#     if category:
-#         query = query.join(ProductCategory).filter(ProductCategory.url_title.ilike(category))
-#
-#
-#     main_categories = ProductCategory.query.filter_by(is_active=True, parent_id=None).all()
-#
-#     return render_template(
-#         'product_module/product_list.html',
-#         products=query,
-#
-#         main_categories=main_categories  # این اضافه میشه
-#     )
 
 
 @p_views.route("<string:slug>")

@@ -16,6 +16,11 @@ def get_random_string(length=72):
     return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
 
 
+@account_views.errorhandler(404)
+def page_not_found(e):
+    return render_template('account_module/forbidden.html'), 404
+
+
 @account_views.route('register/', methods=['GET', 'POST'])
 def register_view():
     form = RegisterForm()
