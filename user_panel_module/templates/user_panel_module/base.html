@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link rel="stylesheet" href="/static/css/user_panel.css"/>
+
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+<div class="dashboard-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="user-profile">
+
+
+            <img
+                    src=""
+                    alt="Profile"
+                    class="profile-img"
+            />
+
+            <h3>John Doe</h3>
+            <p>Premium Member</p>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul>
+                <li class="active">
+                    <a href=""><i class="fas fa-home"></i> Dashboard</a>
+                </li>
+                <li>
+                    <a href=""><i class="fas fa-user"></i> Profile</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-shopping-cart"></i> Orders</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-heart"></i> Wishlist</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-map-marker-alt"></i> Addresses</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-credit-card"></i> Payments</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+</div>
+
+<script src="/static/js/user_panel.js"></script>
+</body>
+</html>
