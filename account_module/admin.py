@@ -29,9 +29,13 @@ class UserAdmin(ModelView):
         file = request.files.get('avatar')
         if file and file.filename:
             filename = secure_filename(file.filename)
-            upload_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+            folder_name = 'User'
+            folder_path = os.path.join(current_app.config['UPLOAD_FOLDER'], folder_name)
+            os.makedirs(folder_path, exist_ok=True)
+            upload_path = os.path.join(folder_path, filename)
+
             # ذخیره فایل در مسیر static/uploads/
             file.save(upload_path)
-            model.avatar = filename
+            model.avatar = f'{folder_name}/{filename}'
 
         return super().on_model_change(form, model, is_created)

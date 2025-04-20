@@ -36,7 +36,8 @@
             {% if current_user.is_authenticated %}
                 <div class="loging_signup">
                     <a href="{{ url_for('account_views.logout_view') }}">Logout <i class="fa-solid fa-sign-out"></i></a>
-                    <a href="" style="text-decoration: none">User Panel <i class="fa-solid fa-user-plus"></i></a>
+                    <a href="{{ url_for('user_views.user') }}" style="text-decoration: none">User Panel <i
+                            class="fa-solid fa-user-plus"></i></a>
                 </div>
             {% else %}
                 <div class="loging_signup">
