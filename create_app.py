@@ -2,7 +2,7 @@ import os
 
 from flask import Flask
 from flask_admin.contrib.sqla import ModelView
-
+from flask_login import current_user
 from extensions import db, migrate, admin, login_manager, mail, thumb
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -32,7 +32,7 @@ def create_app():
         site_setting = SiteSetting.query.filter_by(is_main_setting=True).first()
         footer_link_boxes = FooterLinkBox.query.all()
 
-        return dict(site_setting=site_setting, footer_link_boxes=footer_link_boxes)
+        return dict(site_setting=site_setting, footer_link_boxes=footer_link_boxes, current_user=current_user)
 
     db.init_app(app)
     migrate.init_app(app, db)
