@@ -4,9 +4,10 @@ from io import BytesIO
 from PIL import Image, ImageOps
 from flask import Blueprint, request, render_template, session, current_app, send_file, abort
 from sqlalchemy.orm import subqueryload
+from sqlalchemy import func
 from unicodedata import category
-
-from .models import Product, ProductCategory
+from extensions import db
+from .models import Product, ProductCategory, ProductBrand
 
 p_views = Blueprint('p_views', __name__, template_folder='templates')
 
@@ -38,7 +39,8 @@ def get_image(filename):
 
 @p_views.route('/')
 @p_views.route('/cat/<string:category>')
-def product_list(category=None):
+@p_views.route('/brand/<string:brand>')
+def product_list(category=None, brand=None):
     page = request.args.get('page', 1, type=int)
     per_page = 1
 
@@ -47,16 +49,24 @@ def product_list(category=None):
     if category:
         query = query.join(Product.category).filter(ProductCategory.url_title.ilike(category))
 
+    if brand:
+        query = query.join(Product.brand).filter(ProductBrand.url_title.ilike(brand))
+
     products = query.paginate(page=page, per_page=per_page, error_out=False)
 
     # فقط وقتی این ویو رندر میشه، دسته‌بندی‌ها هم پاس داده میشن
     main_categories = ProductCategory.query.options(subqueryload(ProductCategory.parent)).filter_by(is_active=True,
                                                                                                     parent_id=None).all()
 
+    brands = db.session.query(ProductBrand, func.count(Product.id).label('products_count')).join(Product,
+                                                                                                 isouter=True).filter(
+        ProductBrand.is_active == True
+    ).group_by(ProductBrand.id).all()
+
     return render_template('product_module/product_list.html',
                            products=products,
                            main_categories=main_categories,
-                           selected_category=category)
+                           brands=brands)
 
 
 #

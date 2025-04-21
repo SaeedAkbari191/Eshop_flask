@@ -52,38 +52,13 @@
                 <div class="filter_item">
                     <h4>Brand</h4>
                     <div class="content">
-
-                        <div class="item">
-                            <span>Apple</span>
-                            <input type="checkbox">
-                        </div>
-
-                        <div class="item">
-                            <span>samsung</span>
-                            <input type="checkbox">
-                        </div>
-
-
-                        <div class="item">
-                            <span>intel</span>
-                            <input type="checkbox">
-                        </div>
-
-
-                        <div class="item">
-                            <span>oppo</span>
-                            <input type="checkbox">
-                        </div>
-
-                        <div class="item">
-                            <span>xiaomi</span>
-                            <input type="checkbox">
-                        </div>
-
-                        <div class="item">
-                            <span>huawei</span>
-                            <input type="checkbox">
-                        </div>
+                        {% for brand,count in brands %}
+                            <div class="item">
+                                <span><a
+                                        href="{{ url_for('p_views.product_list',brand=brand.url_title) }}">{{ brand.title }}</a></span>
+                                ( {{ count }} )
+                            </div>
+                        {% endfor %}
 
                     </div>
                 </div>
