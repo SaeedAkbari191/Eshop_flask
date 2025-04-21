@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, TextAreaField, SubmitField
-from wtforms.validators import DataRequired, Email, Length
+from wtforms import StringField, TextAreaField, SubmitField, PasswordField
+from wtforms.validators import DataRequired, Length, EqualTo
 
 
 class EditProfileForm(FlaskForm):
@@ -55,3 +55,20 @@ class EditProfileForm(FlaskForm):
                                    "row": 5,
 
                                })
+
+
+class ChangePasswordForm(FlaskForm):
+    current_password = PasswordField('Current Password', validators=[
+        DataRequired(), Length(max=100)
+    ])
+    password = PasswordField('New Password', validators=[
+        DataRequired()
+    ])
+    confirm_password = PasswordField('Confirm Password', validators=[
+        DataRequired(),
+        EqualTo('password', message='Passwords do not match')
+    ])
+    submit = SubmitField('Change Password',
+                         render_kw={
+                             'class': 'btn save-btn',
+                         })

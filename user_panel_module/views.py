@@ -1,9 +1,9 @@
 from flask import render_template, Blueprint, redirect, request, url_for, flash
-from flask_login import login_required, current_user
+from flask_login import login_required, current_user, logout_user
 from werkzeug.utils import secure_filename
 import os
 
-from .forms import EditProfileForm
+from .forms import EditProfileForm, ChangePasswordForm
 from extensions import db
 
 user_views = Blueprint('user_views', __name__, template_folder='templates')
@@ -43,30 +43,24 @@ def edit_profile():
                            edit_profile_form=form,
                            current_user=current_user)
 
-    # form = EditProfileForm(obj=current_user)
-    # if request.method == 'POST' and form.validate_on_submit():
-    #     # به‌روزرسانی اطلاعات متنی
-    #     current_user.first_name = form.first_name.data
-    #     current_user.last_name = form.last_name.data
-    #     current_user.address = form.address.data
-    #     current_user.about_user = form.about_user.data
-    #
-    #     # اگر فایل آپلود شده موجود بود
-    #     avatar_file = form.avatar.data
-    #     if avatar_file and hasattr(avatar_file, 'filename') and avatar_file.filename != '':
-    #         # ساخت نام امن فایل و مسیر ذخیره‌سازی
-    #         filename = secure_filename(avatar_file.filename)
-    #         avatar_folder = os.path.join('static', 'uploads', 'user')
-    #         os.makedirs(avatar_folder, exist_ok=True)
-    #
-    #         avatar_path = os.path.join(avatar_folder, f"user_{current_user.id}_{filename}")
-    #         avatar_file.save(avatar_path)
-    #
-    #         # ذخیره مسیر نسبی در دیتابیس (مثلاً: user/user_3_john.jpg)
-    #         current_user.avatar = os.path.join('user', f"user_{current_user.id}_{filename}")
-    #
-    #     # ذخیره تغییرات در دیتابیس
-    #     db.session.commit()
-    #     flash("Profile updated successfully.", "success")
-    #     return redirect(url_for('user_views.user'))
-    # return render_template('user_panel_module/edit_profile_page.html', edit_profile_form=form, current_user=current_user)
+
+@user_views.route('/settings/', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    form = ChangePasswordForm()
+
+    if form.validate_on_submit():
+        current_password = form.current_password.data
+        new_password = form.password.data
+
+        if current_user.check_password(current_password):
+            current_user.set_password(new_password)
+            db.session.commit()
+            logout_user()
+            flash('Password changed successfully. Please log in again.', 'success')
+            return redirect(url_for('account_views.login_view'))  # آدرس لاگین رو تنظیم کن
+
+        else:
+            form.current_password.errors.append('Current password is incorrect.')
+
+    return render_template('user_panel_module/settings.html', change_password_form=form)

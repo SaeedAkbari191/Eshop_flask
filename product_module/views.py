@@ -50,7 +50,8 @@ def product_list(category=None):
     products = query.paginate(page=page, per_page=per_page, error_out=False)
 
     # فقط وقتی این ویو رندر میشه، دسته‌بندی‌ها هم پاس داده میشن
-    main_categories = ProductCategory.query.options(subqueryload(ProductCategory.parent)).filter_by(is_active=True, parent_id=None).all()
+    main_categories = ProductCategory.query.options(subqueryload(ProductCategory.parent)).filter_by(is_active=True,
+                                                                                                    parent_id=None).all()
 
     return render_template('product_module/product_list.html',
                            products=products,

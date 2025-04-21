@@ -15,6 +15,11 @@
     {% include 'user_panel_module/components/user_panel_menu_components.html' %}
     <!-- Main Content -->
     <main class="main-content">
+{#        {% for message in get_flashed_messages() %}#}
+{#            <div class="alert alert-warning">#}
+{#                {{ message }}#}
+{#            </div>#}
+{#        {% endfor %}#}
         {% block content %}{% endblock %}
     </main>
 </div>
