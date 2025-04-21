@@ -8,9 +8,16 @@
 
     <div class="top_page">
         <div class="containeres">
-            <h1>Experience the Future of Technology with Our Topico.</h1>
-            <p>Find everything you need to transform your home into a smart, connected space. Our Topico store offers a
-                wide range of devices to fit your needs</p>
+            {% if products.items %}
+                <h1>Experience the Future of Technology with Our Topico.</h1>
+                <p>Find everything you need to transform your home into a smart, connected space. Our Topico store
+                    offers a wide range of devices to fit your needs</p>
+            {% else %}
+                <div class="alert-wrapper" id="alertBox">
+                    Not Products Available
+                </div>
+            {% endif %}
+
         </div>
     </div>
 
