@@ -77,7 +77,7 @@ function getCartItems() {
     price_cart_Head.innerHTML = "$" + total_price
     count_item.innerHTML = product_cart.length
 
-    count_item_cart.innerHTML = ` (${product_cart.length}Item in Cart)`
+    count_item_cart.innerHTML = ` ${product_cart.length} Item in Cart`
     price_cart_total.innerHTML = "$" + total_price
 }
 
@@ -110,6 +110,28 @@ back_to_top.addEventListener("click", function () {
     })
 })
 
+
+// function toggleSubcategories(element) {
+//     const subList = element.nextElementSibling;
+//     const arrow = element.querySelector(".arrow");
+//     subList.classList.toggle("open");
+//     arrow.classList.toggle("rotate");
+// }
+
+// function toggleExclusive(clickedElement) {
+//     const allSubLists = document.querySelectorAll('.subcategory-list');
+//     const allArrows = document.querySelectorAll('.arrow');
+//
+//     allSubLists.forEach(list => list.classList.remove('open'));
+//     allArrows.forEach(arrow => arrow.classList.remove('rotate'));
+//
+//     const subList = clickedElement.nextElementSibling;
+//     const arrow = clickedElement.querySelector(".arrow");
+//
+//     subList.classList.add('open');
+//     arrow.classList.add('rotate');
+// }
+
 function toggleExclusive(element) {
     const subcategoryList = element.nextElementSibling;
     const arrow = element.querySelector('.arrow');
@@ -136,3 +158,14 @@ function toggleExclusive(element) {
 setTimeout(() => {
     document.getElementById('alertBox').classList.add('alert-hidden');
 }, 5000);
+
+// window.addEventListener('beforeunload', () => {
+//     window.scrollTo(0, 0)
+// })
+
+window.addEventListener('load', function () {
+    document.body.classList.add('loaded');
+})
+window.addEventListener('load', function () {
+    document.body.classList.add('preload');
+})

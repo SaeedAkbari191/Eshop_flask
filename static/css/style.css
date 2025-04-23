@@ -22,6 +22,12 @@
 body {
     background: #f5f6f9;
     margin-top: 180px;
+    opacity: 0;
+    transition: opacity 0.1s ease-in-out;
+}
+
+body.loaded {
+    opacity: 1;
 }
 
 h1, h2, h3, h4, h5, h6 {

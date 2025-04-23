@@ -18,7 +18,7 @@
                     {% for slider in sliders %}
                         <div class="swiper-slide">
                             <a href="#"><img src="{{ url_for('setting_views.get_image',filename=slider.image) }}"
-                                             alt=""></a>
+                                             alt="" loading="lazy"></a>
                         </div>
                     {% endfor %}
                 </div>
@@ -62,8 +62,6 @@
                     <p>Free Shipping on all order</p>
                 </div>
             </div>
-
-
             <div class="feature_item">
                 <img src="/static/img/features5.png" alt="">
                 <div class="text">
@@ -71,8 +69,6 @@
                     <p>Free Shipping on all order</p>
                 </div>
             </div>
-
-
         </div>
     </section>
 
@@ -83,7 +79,7 @@
                 <div class="banner_img">
                     <div class="glass_hover"></div>
                     <a href="{{ banner.url_title }}"></a>
-                    <img src="{{ url_for('setting_views.get_image',filename=banner.image) }}" alt="">
+                    <img src="{{ url_for('setting_views.get_image',filename=banner.image) }}" alt="" loading="lazy">
                 </div>
             {% endfor %}
         </div>
@@ -109,9 +105,11 @@
                             </div>
                             <span class="sale_present">%20</span>
                             <div class="img_product">
-                                <img src="{{ url_for('setting_views.get_image',filename=product.image1) }}" alt="">
+                                <img src="{{ url_for('setting_views.get_image',filename=product.image1) }}" alt=""
+                                     loading="lazy">
                                 <img class="img_hover"
-                                     src="{{ url_for('setting_views.get_image',filename=product.image2) }}" alt="">
+                                     src="{{ url_for('setting_views.get_image',filename=product.image2) }}" alt=""
+                                     loading="lazy">
                             </div>
                             <h3 class="name_product"><a
                                     href="{{ url_for('p_views.product_detail', slug=product.slug ) }}">{{ product.title }}</a>
@@ -143,7 +141,8 @@
                 <div class="banner_img">
                     <div class="glass_hover"></div>
                     <a href="{{ middle_banner.url_title }}"></a>
-                    <img src="{{ url_for('setting_views.get_image',filename= middle_banner.image ) }}" alt="">
+                    <img src="{{ url_for('setting_views.get_image',filename= middle_banner.image ) }}" alt=""
+                         loading="lazy">
                 </div>
             {% endfor %}
         </div>
@@ -158,9 +157,9 @@
 
             <div class="slide_with_img">
 
-                <div class="categ_img">
-                    <a href="#"><img src="/static/img/banner/banner-sm-1.jpg" alt=""></a>
-                </div>
+                                <div class="categ_img">
+                                    <a href="#"><img src="/static/img/banner/banner-sm-1.jpg" alt=""></a>
+                                </div>
 
 
                 <div class="product_swip mySwiper">
@@ -175,9 +174,11 @@
                                 </div>
                                 <span class="sale_present">%20</span>
                                 <div class="img_product">
-                                    <img src="{{ url_for('setting_views.get_image',filename=product.image1) }}" alt="">
+                                    <img src="{{ url_for('setting_views.get_image',filename=product.image1) }}" alt=""
+                                         loading="lazy">
                                     <img class="img_hover"
-                                         src="{{ url_for('setting_views.get_image',filename=product.image2) }}" alt="">
+                                         src="{{ url_for('setting_views.get_image',filename=product.image2) }}" alt=""
+                                         loading="lazy">
                                 </div>
                                 <h3 class="name_product"><a
                                         href="{{ url_for('p_views.product_detail', slug=product.slug ) }}">{{ product.title }}</a>
@@ -213,7 +214,7 @@
                 <div class="banner_img">
                     <div class="glass_hover"></div>
                     <a href="{{ banner.url_title }}"></a>
-                    <img src="{{ url_for('setting_views.get_image',filename= banner.image ) }}" alt="">
+                    <img src="{{ url_for('setting_views.get_image',filename= banner.image ) }}" alt="" loading="lazy">
                 </div>
             {% endfor %}
         </div>

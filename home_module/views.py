@@ -12,8 +12,9 @@ views = Blueprint('views', __name__, template_folder='templates')
 def home():
     sliders = Slider.query.filter_by(is_active=True).all()
     banners = SiteBanner.query.filter_by(is_active=True, position=SiteBannerPosition.home).all()
-    products = Product.query.filter_by(is_active=True).all()
-    main_categories = ProductCategory.query.filter_by(is_active=True, parent_id=None)
+    products = Product.query.filter_by(is_active=True).limit(7).all()
+    main_categories = ProductCategory.query.options(subqueryload(ProductCategory.parent)).filter_by(is_active=True,
+                                                                                                    parent_id=None).all()
 
     context = {
         'sliders': sliders,
