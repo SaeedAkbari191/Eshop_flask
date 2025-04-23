@@ -2,7 +2,7 @@ from flask import Blueprint, render_template
 from flask import Blueprint, render_template
 from sqlalchemy.orm import subqueryload
 
-from product_module.models import ProductCategory
+from product_module.models import ProductCategory, Product
 from site_module.models import Slider, SiteSetting
 
 views = Blueprint('views', __name__, template_folder='templates')
@@ -13,7 +13,9 @@ def home():
     slider = Slider.query.filter_by(is_active=True)
     main_categories = ProductCategory.query.options(subqueryload(ProductCategory.parent)).filter_by(is_active=True,
                                                                                                     parent_id=None).all()
-    return render_template('home_module/index_page.html', sliders=slider, main_categories=main_categories)
+    products = Product.query.filter_by(is_active=True).all()
+    return render_template('home_module/index_page.html', sliders=slider, main_categories=main_categories,
+                           products=products)
 
 
 @views.route('/about-us')
