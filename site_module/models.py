@@ -1,4 +1,6 @@
 from extensions import db
+from sqlalchemy import Enum
+import enum
 
 
 class SiteSetting(db.Model):
@@ -48,3 +50,21 @@ class Slider(db.Model):
 
     def __str__(self):
         return self.title
+
+
+class SiteBannerPosition(enum.Enum):
+    home = 'home'
+    product_list = 'product_list'
+    product_details = 'product_details'
+
+
+class SiteBanner(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    url_title = db.Column(db.String(400), nullable=False)
+    image = db.Column(db.String(255), nullable=False)  # برای مسیر عکس
+    is_active = db.Column(db.Boolean, default=True, nullable=False)
+    position = db.Column(db.Enum(SiteBannerPosition), nullable=False)
+
+    def __repr__(self):
+        return f'<SiteBanner {self.title}>'

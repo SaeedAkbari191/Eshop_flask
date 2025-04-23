@@ -3,19 +3,27 @@ from flask import Blueprint, render_template
 from sqlalchemy.orm import subqueryload
 
 from product_module.models import ProductCategory, Product
-from site_module.models import Slider, SiteSetting
+from site_module.models import Slider, SiteSetting, SiteBanner, SiteBannerPosition
 
 views = Blueprint('views', __name__, template_folder='templates')
 
 
 @views.route('/', methods=['GET', 'POST'])
 def home():
-    slider = Slider.query.filter_by(is_active=True)
-    main_categories = ProductCategory.query.options(subqueryload(ProductCategory.parent)).filter_by(is_active=True,
-                                                                                                    parent_id=None).all()
+    sliders = Slider.query.filter_by(is_active=True).all()
+    banners = SiteBanner.query.filter_by(is_active=True, position=SiteBannerPosition.home).all()
     products = Product.query.filter_by(is_active=True).all()
-    return render_template('home_module/index_page.html', sliders=slider, main_categories=main_categories,
-                           products=products)
+    main_categories = ProductCategory.query.filter_by(is_active=True, parent_id=None).all()
+
+    context = {
+        'sliders': sliders,
+        'main_categories': main_categories,
+        'top_banners': banners[:3],
+        'middle_banners': banners[3:5],
+        'bottom_banners': banners[5:8],
+        'products': products,
+    }
+    return render_template('home_module/index_page.html', **context)
 
 
 @views.route('/about-us')

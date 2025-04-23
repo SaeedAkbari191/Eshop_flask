@@ -83,28 +83,13 @@
 
     <section class="banner">
         <div class="containeres">
-
-            <div class="banner_img">
-                <div class="glass_hover"></div>
-                <a href="#"></a>
-                <img src="/static/img/banner/banner-1.jpg" alt="">
-
-            </div>
-
-            <div class="banner_img">
-                <div class="glass_hover"></div>
-                <a href="#"></a>
-                <img src="/static/img/banner/banner-2.jpg" alt="">
-
-            </div>
-
-            <div class="banner_img">
-                <div class="glass_hover"></div>
-                <a href="#"></a>
-                <img src="/static/img/banner/banner-3.jpg" alt="">
-
-            </div>
-
+            {% for top_banner in top_banners %}
+                <div class="banner_img">
+                    <div class="glass_hover"></div>
+                    <a href="#"></a>
+                    <img src="{{ url_for('setting_views.get_image',filename=top_banner.image) }}" alt="">
+                </div>
+            {% endfor %}
         </div>
     </section>
 
