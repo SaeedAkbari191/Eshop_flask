@@ -9,15 +9,11 @@
         <div class="containeres">
             <div class="side_bar">
                 <h2><i class="fa-solid fa-bars"></i> SHop by derparment</h2>
-                <a href="#">All Categories</a>
-                <a href="#">Best Seller Products</a>
-                <a href="#">New Arrivals</a>
-                <a href="#">Top 10 Offers</a>
-                <a href="#">Phones & Tablet</a>
-                <a href="#">Electronics & Digita</a>
-                <a href="#">Fashion & Clothings</a>
-                <a href="#">Jewelry & Watches</a>
-                <a href="#">TV & Audio</a>
+                {% for main_category in main_categories %}
+                    <a href="{{ url_for('p_views.product_list',category=main_category.url_title) }}">{{ main_category.title }}</a>
+                {% endfor %}
+
+
             </div>
 
             <!-- Swiper -->
@@ -25,7 +21,8 @@
                 <div class="swiper-wrapper">
                     {% for slider in sliders %}
                         <div class="swiper-slide">
-                            <a href="#"><img src="{{ url_for('setting_views.get_image',filename=slider.image) }}" alt=""></a>
+                            <a href="#"><img src="{{ url_for('setting_views.get_image',filename=slider.image) }}"
+                                             alt=""></a>
                         </div>
                     {% endfor %}
 
