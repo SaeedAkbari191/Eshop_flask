@@ -13,7 +13,7 @@ def home():
     sliders = Slider.query.filter_by(is_active=True).all()
     banners = SiteBanner.query.filter_by(is_active=True, position=SiteBannerPosition.home).all()
     products = Product.query.filter_by(is_active=True).all()
-    main_categories = ProductCategory.query.filter_by(is_active=True, parent_id=None).all()
+    main_categories = ProductCategory.query.filter_by(is_active=True, parent_id=None)
 
     context = {
         'sliders': sliders,

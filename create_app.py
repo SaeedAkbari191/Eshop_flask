@@ -50,8 +50,8 @@ def create_app():
     from account_module.models import User
     from account_module.admin import UserAdmin
 
-    from site_module.models import SiteSetting, Slider, FooterLink, FooterLinkBox,SiteBanner
-    from site_module.admin import SiteSettingAdmin, SliderAdmin, FooterLinkAdmin
+    from site_module.models import SiteSetting, Slider, FooterLink, FooterLinkBox, SiteBanner
+    from site_module.admin import SiteSettingAdmin, SliderAdmin, FooterLinkAdmin, SiteBannerAdmin
 
     admin.add_view(ProductAdmin(Product, db.session))
     admin.add_view(ProductCategoryAdmin(ProductCategory, db.session))
@@ -63,7 +63,7 @@ def create_app():
     admin.add_view(SliderAdmin(Slider, db.session))
     admin.add_view(FooterLinkAdmin(FooterLink, db.session))
     admin.add_view(ModelView(FooterLinkBox, db.session))
-    admin.add_view(ModelView(SiteBanner, db.session))
+    admin.add_view(SiteBannerAdmin(SiteBanner, db.session))
     # admin.add_view(ModelView(product_category_association, db.session))
 
     from home_module.views import views
