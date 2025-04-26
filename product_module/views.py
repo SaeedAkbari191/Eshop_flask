@@ -1,13 +1,13 @@
 import os
 from io import BytesIO
-
+from flask_login import current_user
 from PIL import Image, ImageOps
 from flask import Blueprint, request, render_template, session, current_app, send_file, abort
-from sqlalchemy.orm import subqueryload
 from sqlalchemy import func
-from unicodedata import category
+from sqlalchemy.orm import subqueryload
 from extensions import db
-from .models import Product, ProductCategory, ProductBrand
+from .models import Product, ProductCategory, ProductBrand, ProductVisit
+from utils.http_service import get_client_ip
 
 p_views = Blueprint('p_views', __name__, template_folder='templates')
 
@@ -74,10 +74,30 @@ def product_list(category=None, brand=None):
 
 @p_views.route("<string:slug>")
 def product_detail(slug):
-    products = Product.query.filter_by(slug=slug).first_or_404()
+    product = Product.query.filter_by(slug=slug).first_or_404()
 
+    # بررسی اینکه آیا این محصول در علاقه‌مندی‌ها هست یا نه
     favorite_product_id = session.get('ProductFavorite')
-    is_favorite = favorite_product_id == str(products.id)
+    is_favorite = str(product.id) == str(favorite_product_id)
 
-    return render_template('product_module/product_details.html', products=products,
-                           )
+    # گرفتن آی‌پی کاربر
+    user_ip = get_client_ip(request)
+    print(user_ip)
+    user_id = current_user.id if current_user.is_authenticated else None
+
+    # بررسی اینکه آیا قبلاً این آی‌پی این محصول را دیده یا نه
+    visited = ProductVisit.query.filter(
+        func.lower(ProductVisit.ip) == func.lower(user_ip),
+        ProductVisit.product_id == product.id
+    ).first()
+
+    if not visited:
+        new_visit = ProductVisit(ip=user_ip, user_id=user_id, product_id=product.id)
+        db.session.add(new_visit)
+        db.session.commit()
+
+    return render_template(
+        'product_module/product_details.html',
+        products=product,
+        is_favorite=is_favorite
+    )

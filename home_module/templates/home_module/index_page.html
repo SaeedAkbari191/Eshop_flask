@@ -90,7 +90,7 @@
         <div class="containeres">
             <div class="sale_sec mySwiper">
                 <div class="top_slide">
-                    <h2>on sale <span>product</span></h2>
+                    <h2>Latest <span>product</span></h2>
                 </div>
 
                 <div id="swiper_items_sale" class="products swiper-wrapper">
@@ -149,57 +149,50 @@
     </section>
 
     {#    COMPUTER AND DESKTOP#}
-    <section class="slide slide_product">
+    <section class="slide slide_sale">
         <div class="containeres">
-            <div class="top_slide">
-                <h2>Computer & Desktop <span>products</span></h2>
-            </div>
+            <div class="sale_sec mySwiper">
+                <div class="top_slide">
+                    <h2>Trending <span>product</span></h2>
+                </div>
 
-            <div class="slide_with_img">
+                <div id="swiper_items_sale" class="products swiper-wrapper">
 
-                                <div class="categ_img">
-                                    <a href="#"><img src="/static/img/banner/banner-sm-1.jpg" alt=""></a>
-                                </div>
-
-
-                <div class="product_swip mySwiper">
-                    <div class="products other_product_swiper swiper-wrapper" id="other_product_swiper">
-                        {% for product in products %}
-                            <div class="product swiper-slide">
-                                <div class="icons">
+                    {% for product in products %}
+                        <div class="product swiper-slide">
+                            <div class="icons">
                                 <span><i onclick="addToCart(1,this)"
                                          class="fa-solid fa-cart-plus add-to-cart"></i></span>
-                                    <span><i class="fa-solid fa-heart"></i></span>
-                                    <span><i class="fa-solid fa-share"></i></span>
-                                </div>
-                                <span class="sale_present">%20</span>
-                                <div class="img_product">
-                                    <img src="{{ url_for('setting_views.get_image',filename=product.image1) }}" alt=""
-                                         loading="lazy">
-                                    <img class="img_hover"
-                                         src="{{ url_for('setting_views.get_image',filename=product.image2) }}" alt=""
-                                         loading="lazy">
-                                </div>
-                                <h3 class="name_product"><a
-                                        href="{{ url_for('p_views.product_detail', slug=product.slug ) }}">{{ product.title }}</a>
-                                </h3>
-                                <div class="stars">
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                </div>
-                                <div class="price">
-                                    <p><span>${{ product.price }}</span></p>
-                                    <p class="old_price">${{ product.old_price }}</p>
-                                </div>
+                                <span><i class="fa-solid fa-heart"></i></span>
+                                <span><i class="fa-solid fa-share"></i></span>
                             </div>
-                        {% endfor %}
-                    </div>
-                    <div class="swiper-button-next btn_Swip"></div>
-                    <div class="swiper-button-prev btn_Swip"></div>
+                            <span class="sale_present">%20</span>
+                            <div class="img_product">
+                                <img src="{{ url_for('setting_views.get_image',filename=product.image1) }}" alt=""
+                                     loading="lazy">
+                                <img class="img_hover"
+                                     src="{{ url_for('setting_views.get_image',filename=product.image2) }}" alt=""
+                                     loading="lazy">
+                            </div>
+                            <h3 class="name_product"><a
+                                    href="{{ url_for('p_views.product_detail', slug=product.slug ) }}">{{ product.title }}</a>
+                            </h3>
+                            <div class="stars">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                            </div>
+                            <div class="price">
+                                <p><span>${{ product.price }}</span></p>
+                                <p class="old_price">${{ product.old_price }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
+                <div class="swiper-button-next btn_Swip"></div>
+                <div class="swiper-button-prev btn_Swip"></div>
             </div>
         </div>
     </section>

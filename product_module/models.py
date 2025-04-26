@@ -71,3 +71,15 @@ class ProductTag(db.Model):
 
     def str(self):
         return self.caption
+
+
+class ProductVisit(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+    ip = db.Column(db.String(45), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    product = db.relationship('Product', backref='visits')
+    user = db.relationship('User', backref='product_visits')
+
+    def __repr__(self):
+        return f"<ProductVisit {self.product.title} / {self.ip}>"
