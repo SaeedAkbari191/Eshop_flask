@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template
 from flask import Blueprint, render_template
 from sqlalchemy.orm import subqueryload
-
-from product_module.models import ProductCategory, Product
+from extensions import db
+from sqlalchemy import func
+from product_module.models import ProductCategory, Product, ProductVisit
 from site_module.models import Slider, SiteSetting, SiteBanner, SiteBannerPosition
 
 views = Blueprint('views', __name__, template_folder='templates')
@@ -12,9 +13,19 @@ views = Blueprint('views', __name__, template_folder='templates')
 def home():
     sliders = Slider.query.filter_by(is_active=True).all()
     banners = SiteBanner.query.filter_by(is_active=True, position=SiteBannerPosition.home).all()
-    products = Product.query.filter_by(is_active=True ,is_deleted=False).order_by(Product.id.desc()).limit(5).all()
+    products = Product.query.filter_by(is_active=True, is_deleted=False).order_by(Product.id.desc()).limit(5).all()
     main_categories = ProductCategory.query.options(subqueryload(ProductCategory.parent)).filter_by(is_active=True,
                                                                                                     parent_id=None).all()
+    most_visit_product = (
+        db.session.query(Product, func.count(ProductVisit.id).label('visit_count'))
+        .join(ProductVisit)
+        .filter(Product.is_active == True, Product.is_deleted == False)
+        .group_by(Product)
+        .order_by(func.count(ProductVisit.id).desc())
+        .limit(12)
+        .all()
+    )
+    most_visit_product = [item[0] for item in most_visit_product]
 
     context = {
         'sliders': sliders,
@@ -23,6 +34,7 @@ def home():
         'middle_banners': banners[3:5],
         'bottom_banners': banners[5:8],
         'products': products,
+        'most_visit_product': most_visit_product,
     }
     return render_template('home_module/index_page.html', **context)
 

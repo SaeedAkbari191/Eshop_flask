@@ -148,7 +148,7 @@
         </div>
     </section>
 
-    {#    COMPUTER AND DESKTOP#}
+    {#    MOST VIEWED PART#}
     <section class="slide slide_sale">
         <div class="containeres">
             <div class="sale_sec mySwiper">
@@ -158,7 +158,8 @@
 
                 <div id="swiper_items_sale" class="products swiper-wrapper">
 
-                    {% for product in products %}
+
+                    {% for product in most_visit_product %}
                         <div class="product swiper-slide">
                             <div class="icons">
                                 <span><i onclick="addToCart(1,this)"
