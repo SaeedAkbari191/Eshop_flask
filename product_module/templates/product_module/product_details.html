@@ -4,6 +4,10 @@
     {{ products.title }}
 {% endblock %}
 
+{% block extra_link %}
+    <link rel="stylesheet" href="/static/lib/image-lightBox/css/lightbox.min.css">
+{% endblock %}
+
 {% block content %}
     <div class="item_detail">
         <div class="containeres">
@@ -11,15 +15,23 @@
 
             <div class="img_item">
                 <div class="big_img">
-                    <img id="bigImg" src="{{ url_for('p_views.get_image',filename=products.image1) }}" alt="">
-                    {#                    <img src="{{ url_for('p_views.get_image', filename=product.image1) }}" alt="Product 1">#}
+                    <a id="show_large_image_modal" href="{{ url_for('p_views.get_image',filename=products.image1) }}"
+                       data-lightbox="product-image">
+                        <img id="bigImg" src="{{ url_for('p_views.get_image',filename=products.image1) }}" alt="">
+                    </a>
                 </div>
 
                 <div class="sm_imgs">
-                    <img onclick="ChangeItemImage(this.src)"
-                         src="{{ url_for('p_views.get_image',filename=products.image1) }}" alt="">
-                    <img onclick="ChangeItemImage(this.src)"
-                         src="{{ url_for('p_views.get_image',filename=products.image2) }}" alt="">
+                    {% for product in products_galleries %}
+                        <img src="{{ url_for('p_views.get_image',filename=product.image) }}"
+                             data-big="{{ url_for('p_views.get_image',filename=product.image) }}"
+                             onclick="ChangeItemImage(this)"
+                             alt="">
+                    {% endfor %}
+                    <img src="{{ url_for('p_views.get_image',filename=products.image1) }}"
+                         data-big="{{ url_for('p_views.get_image',filename=products.image1) }}"
+                         onclick="ChangeItemImage(this)"
+                         alt="">
                 </div>
             </div>
 
@@ -60,12 +72,14 @@
                 </div>
 
                 <div id="swiper_items_sale" class="products swiper-wrapper">
+                    {% for product in related_products %}
+                        {% include 'includes/products_items_partial.html' %}
+                    {% endfor %}
 
 
                 </div>
 
-                <div class="swiper-button-next btn_Swip">
-                </div>
+                <div class="swiper-button-next btn_Swip"></div>
                 <div class="swiper-button-prev btn_Swip"></div>
 
 
@@ -77,4 +91,8 @@
     <div class="back_to_top">
         <p>back to top</p>
     </div>
+{% endblock %}
+
+{% block footer_references %}
+    <script src="/static/lib/image-lightBox/js/lightbox-plus-jquery.min.js"></script>
 {% endblock %}

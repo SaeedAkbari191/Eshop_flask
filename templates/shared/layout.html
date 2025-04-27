@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     {% include 'shared/header_references.html' %}
-    {% block extra_link %}
 
-    {% endblock %}
+    {% block extra_link %}{% endblock %}
 
     <title>{% block title %}Topoco{% endblock %}</title>
 </head>
@@ -20,5 +19,6 @@
 {% include 'shared/site_footer_component.html' %}
 
 {% include 'shared/footer_references.html' %}
+{% block footer_references %}{% endblock %}
 </body>
 </html>

@@ -6,7 +6,7 @@ from flask import Blueprint, request, render_template, session, current_app, sen
 from sqlalchemy import func
 from sqlalchemy.orm import subqueryload
 from extensions import db
-from .models import Product, ProductCategory, ProductBrand, ProductVisit
+from .models import Product, ProductCategory, ProductBrand, ProductVisit, ProductGallery
 from utils.http_service import get_client_ip
 
 p_views = Blueprint('p_views', __name__, template_folder='templates')
@@ -80,6 +80,10 @@ def product_detail(slug):
     favorite_product_id = session.get('ProductFavorite')
     is_favorite = str(product.id) == str(favorite_product_id)
 
+    product_galleries = ProductGallery.query.filter_by(product_id=product.id).limit(3).all()
+    related_product = Product.query.filter_by(brand_id=product.brand_id).filter(Product.id != product.id).limit(
+        12).all()
+
     # گرفتن آی‌پی کاربر
     user_ip = get_client_ip(request)
     print(user_ip)
@@ -99,5 +103,7 @@ def product_detail(slug):
     return render_template(
         'product_module/product_details.html',
         products=product,
-        is_favorite=is_favorite
+        is_favorite=is_favorite,
+        products_galleries=product_galleries,
+        related_products=related_product,
     )

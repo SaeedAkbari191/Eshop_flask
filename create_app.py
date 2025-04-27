@@ -43,8 +43,8 @@ def create_app():
     login_manager.login_message_category = 'info'
     admin.init_app(app)
 
-    from product_module.models import Product, ProductCategory, ProductBrand, ProductTag
-    from product_module.admin import ProductAdmin, ProductCategoryAdmin
+    from product_module.models import Product, ProductCategory, ProductBrand, ProductTag, ProductGallery, ProductVisit
+    from product_module.admin import ProductAdmin, ProductCategoryAdmin, ProductGalleryAdmin
     from contact_module.models import ContactUS
 
     from account_module.models import User
@@ -64,6 +64,8 @@ def create_app():
     admin.add_view(FooterLinkAdmin(FooterLink, db.session))
     admin.add_view(ModelView(FooterLinkBox, db.session))
     admin.add_view(SiteBannerAdmin(SiteBanner, db.session))
+    admin.add_view(ModelView(ProductVisit, db.session))
+    admin.add_view(ProductGalleryAdmin(ProductGallery, db.session))
     # admin.add_view(ModelView(product_category_association, db.session))
 
     from home_module.views import views

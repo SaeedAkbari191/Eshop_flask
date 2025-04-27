@@ -83,3 +83,13 @@ class ProductVisit(db.Model):
 
     def __repr__(self):
         return f"<ProductVisit {self.product.title} / {self.ip}>"
+
+
+class ProductGallery(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+    image = db.Column(db.String(255), nullable=False)  # مسیر عکس را به صورت رشته ذخیره می‌کنیم
+    product = db.relationship('Product', backref=db.backref('galleries', lazy=True))
+
+    def __repr__(self):
+        return self.product.title
