@@ -50,6 +50,19 @@
                 <p class="text_p">{{ products.description }}</p>
                 <h4>Hurry Up! Only {{ products.quantity }} products left in stock.</h4>
 
+                <div class="quantity-wrapper">
+                    <div class="simple-quantity">
+                        <button class="sq-btn minus" type="button">−</button>
+                        <input type="number"
+                               id="product-count"
+                               class="sq-input"
+                               value="1"
+                               min="1"
+                               max="{{ products.quantity }}">
+                        <button class="sq-btn plus" type="button">+</button>
+                    </div>
+                </div>
+
                 <button>add to cart <i class="fa-solid fa-cart-arrow-down"></i></button>
 
                 <div class="icons">
@@ -75,13 +88,9 @@
                     {% for product in related_products %}
                         {% include 'includes/products_items_partial.html' %}
                     {% endfor %}
-
-
                 </div>
-
                 <div class="swiper-button-next btn_Swip"></div>
                 <div class="swiper-button-prev btn_Swip"></div>
-
 
             </div>
         </div>
@@ -96,3 +105,6 @@
 {% block footer_references %}
     <script src="/static/lib/image-lightBox/js/lightbox-plus-jquery.min.js"></script>
 {% endblock %}
+
+
+

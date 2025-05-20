@@ -31,9 +31,8 @@ let show_large_image_modal = document.getElementById("show_large_image_modal");
 function ChangeItemImage(img) {
     let bigImageUrl = img.getAttribute('data-big');
     bigImage.src = bigImageUrl
-    show_large_image_modal.href = bigImageUrl;
+    show_large_image_modal.href = bigImageUrl
 }
-
 
 /* add itmes in cart */
 
@@ -46,7 +45,7 @@ function addToCart(id, btn) {
     product_cart.push(all_products_json[id])
     btn.classList.add("active")
 
-    console.log(product_cart);
+    console.log(id);
     getCartItems()
 }
 
@@ -81,7 +80,7 @@ function getCartItems() {
     price_cart_Head.innerHTML = "$" + total_price
     count_item.innerHTML = product_cart.length
 
-    count_item_cart.innerHTML = ` ${product_cart.length} Item in Cart`
+    count_item_cart.innerHTML = ` (${product_cart.length}Item in Cart)`
     price_cart_total.innerHTML = "$" + total_price
 }
 
@@ -115,27 +114,6 @@ back_to_top.addEventListener("click", function () {
 })
 
 
-// function toggleSubcategories(element) {
-//     const subList = element.nextElementSibling;
-//     const arrow = element.querySelector(".arrow");
-//     subList.classList.toggle("open");
-//     arrow.classList.toggle("rotate");
-// }
-
-// function toggleExclusive(clickedElement) {
-//     const allSubLists = document.querySelectorAll('.subcategory-list');
-//     const allArrows = document.querySelectorAll('.arrow');
-//
-//     allSubLists.forEach(list => list.classList.remove('open'));
-//     allArrows.forEach(arrow => arrow.classList.remove('rotate'));
-//
-//     const subList = clickedElement.nextElementSibling;
-//     const arrow = clickedElement.querySelector(".arrow");
-//
-//     subList.classList.add('open');
-//     arrow.classList.add('rotate');
-// }
-
 function toggleExclusive(element) {
     const subcategoryList = element.nextElementSibling;
     const arrow = element.querySelector('.arrow');
@@ -163,13 +141,50 @@ setTimeout(() => {
     document.getElementById('alertBox').classList.add('alert-hidden');
 }, 5000);
 
-// window.addEventListener('beforeunload', () => {
-//     window.scrollTo(0, 0)
-// })
+var filter = document.querySelector(".filter")
 
-window.addEventListener('load', function () {
-    document.body.classList.add('loaded');
-})
-window.addEventListener('load', function () {
-    document.body.classList.add('preload');
-})
+function open_close_filter() {
+    filter.classList.toggle("active")
+}
+
+//  DD TO ORDER
+function AddToOrder(product_id) {
+    const count = $('#product-count').val();
+    $.get('/order/add-to-order?product_id=' + product_id + '&count=' + count).then(response => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: response.text,
+            icon: response.icon,
+            showCancelButton: false,
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: response.confirmButtonText
+        }).then((result) => {
+
+            if (result.isConfirmed && response.status === 'Not_Authorized') {
+                window.location.href = '/login';
+            }
+        });
+    })
+}
+
+function removeOrderDetail(detailId) {
+    $.get('/user/remove-order-detail?detail_id=' + detailId).then(response => {
+        if (response.status === 'success') {
+            $('#order_detail_content').html(response.body);
+        } else {
+            alert('test');
+        }
+    })
+}
+
+function changeOrderDetail(detailId, state) {
+    $.get('/user/change-order-detail?detail_id=' + detailId + '&state=' + state).then(response => {
+        if (response.status === 'success') {
+            $('#order_detail_content').html(response.body);
+        } else {
+            alert('test');
+        }
+    })
+
+}
+
