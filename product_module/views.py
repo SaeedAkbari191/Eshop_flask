@@ -42,7 +42,7 @@ def get_image(filename):
 @p_views.route('/brand/<string:brand>')
 def product_list(category=None, brand=None):
     page = request.args.get('page', 1, type=int)
-    per_page = 1
+    per_page = 5
 
     query = Product.query.order_by(Product.price.desc())
 

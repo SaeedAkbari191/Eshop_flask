@@ -1,7 +1,7 @@
 import os
-
 from flask import Flask
 from flask_admin.contrib.sqla import ModelView
+from flask_compress import Compress
 from flask_login import current_user
 from extensions import db, migrate, admin, login_manager, mail, thumb
 
@@ -23,7 +23,6 @@ def create_app():
     app.config['MAIL_DEFAULT_SENDER'] = 'm.saeedakbari559728@gmail.com'
     app.config['MAIL_USERNAME'] = 'm.saeedakbari559728@gmail.com'
     app.config['MAIL_PASSWORD'] = 'cpnw wexj hicw flqy'
-
     app.config['THUMBNAIL_MEDIA_ROOT'] = 'static/uploads'
     app.config['THUMBNAIL_MEDIA_THUMBNAIL_ROOT'] = 'static/uploads/thumbnails'
 
@@ -53,6 +52,8 @@ def create_app():
     from site_module.models import SiteSetting, Slider, FooterLink, FooterLinkBox, SiteBanner
     from site_module.admin import SiteSettingAdmin, SliderAdmin, FooterLinkAdmin, SiteBannerAdmin
 
+    from order_module.models import Order
+
     admin.add_view(ProductAdmin(Product, db.session))
     admin.add_view(ProductCategoryAdmin(ProductCategory, db.session))
     admin.add_view(ModelView(ProductBrand, db.session))
@@ -66,6 +67,7 @@ def create_app():
     admin.add_view(SiteBannerAdmin(SiteBanner, db.session))
     admin.add_view(ModelView(ProductVisit, db.session))
     admin.add_view(ProductGalleryAdmin(ProductGallery, db.session))
+    admin.add_view(ModelView(Order, db.session))
     # admin.add_view(ModelView(product_category_association, db.session))
 
     from home_module.views import views
@@ -74,6 +76,7 @@ def create_app():
     from account_module.views import account_views
     from site_module.views import setting_views
     from user_panel_module.views import user_views
+    from order_module.views import order_views
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(p_views, url_prefix='/products')
@@ -81,8 +84,11 @@ def create_app():
     app.register_blueprint(account_views, url_prefix='/')
     app.register_blueprint(setting_views, url_prefix='/')
     app.register_blueprint(user_views, url_prefix='/user')
+    app.register_blueprint(order_views, url_prefix='/order')
 
     if not os.path.exists(UPLOAD_FOLDER):
         os.makedirs(UPLOAD_FOLDER)
+
+    Compress(app)
 
     return app
