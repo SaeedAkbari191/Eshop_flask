@@ -1,0 +1,123 @@
+{% if order.orderdetail_set.count() > 0 %}
+    <main class="containeres cart_page">
+        <div class="cart_page_header">
+            <h2>Shopping Cart</h2>
+            <p>You have <span class="cart_count">{{ order.total_items }}</span> item(s) in your cart</p>
+        </div>
+
+        <div class="cart_table_wrapper">
+            <table class="cart_table">
+                <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Remove</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for detail in order.orderdetail_set.all() %}
+                    <tr>
+                        <td data-label="Product">
+                            <div class="product_item">
+                                <img src="{{ url_for('p_views.get_image', filename=detail.product.image1) }}"
+                                     alt="Product 1">
+                                <div class="product_info">
+                                    <h4>
+                                        <a href="#">{{ detail.product.title }}</a>
+                                    </h4>
+                                    <p>ID: {{ detail.product.id }}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td data-label="Price" class="product_price">${{ detail.product.price }}</td>
+                        <td data-label="Quantity">
+                            <div class="quantity_control">
+                                <button class="decrease"
+                                        onclick="changeOrderDetail({{ detail.id }},'decrease')">-
+                                </button>
+                                <input type="number" value="{{ detail.count }}" readonly/>
+                                <button class="increase"
+                                        onclick="changeOrderDetail({{ detail.id }},'increase')">+
+                                </button>
+                            </div>
+                        </td>
+                        <td data-label="Total" class="item_total">${{ detail.total_price() }}</td>
+                        <td data-label="Remove">
+                            <a onclick="removeOrderDetail('{{ detail.id }}')">
+                                <i class="fa-solid fa-trash remove_item"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="cart_actions">
+            <div class="coupon_box">
+                <h4>Apply Coupon</h4>
+                <div class="coupon_input">
+                    <input type="text" placeholder="Enter coupon code..."/>
+                    <button class="btn_cart">Apply</button>
+                </div>
+            </div>
+
+            <div class="cart_totals">
+                <h4>Cart Totals</h4>
+                <table>
+                    <tr>
+                        <th>Subtotal</th>
+                        <td class="cart_subtotal">${{ sum }}</td>
+                    </tr>
+                    <tr>
+                        <th>Shipping</th>
+                        <td>Free Shipping</td>
+                    </tr>
+                    <tr class="total_row">
+                        <th>Total</th>
+                        <td class="cart_total">${{ sum }}</td>
+                    </tr>
+                </table>
+
+                {% if paypal_data %}
+                    <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+                        {% for key, value in paypal_data.items() %}
+                            <input type="hidden" name="{{ key }}" value="{{ value }}">
+                        {% endfor %}
+                        <button type="submit" class="btn_cart">Proceed to Checkout</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+{% else %}
+    <div class="empty_cart_message">
+        <i class="fa-solid fa-cart-arrow-down"></i>
+        <h3>Your Shopping Cart is Empty!</h3>
+        <p>You have no items in your shopping cart.</p>
+        <a href="{{ url_for('p_views.product_list') }}" class="btn_cart">Continue Shopping</a>
+    </div>
+{% endif %}
+
+<div class="newsletter">
+    <div class="containeres">
+        <div class="text">
+            <img src="{{ url_for('static', filename='img/icon_email.png') }}" alt=""/>
+            <div class="content">
+                <h4>sign up to newsletter</h4>
+                <p>Get email updates about our latest shop...and receive</p>
+                <h6>$30 Coupon For First Shopping</h6>
+            </div>
+        </div>
+
+        <form action="" class="newsletter_form">
+            <input type="email" placeholder="Enter your email here..."/>
+            <button type="submit">subscribe</button>
+        </form>
+    </div>
+</div>
+<div class="back_to_top">
+    <p>back to top</p>
+</div>

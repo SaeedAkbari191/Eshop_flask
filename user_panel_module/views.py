@@ -1,11 +1,11 @@
 import os
 import uuid
-from flask import render_template, Blueprint, redirect, request, url_for, flash
+from flask import render_template, Blueprint, redirect, request, url_for, flash, jsonify
 from flask_login import login_required, current_user, logout_user
 from werkzeug.utils import secure_filename
 
 from extensions import db
-from order_module.models import Order
+from order_module.models import Order, OrderDetail
 from .forms import EditProfileForm, ChangePasswordForm
 
 user_views = Blueprint('user_views', __name__, template_folder='templates')
@@ -27,7 +27,7 @@ def user_basket():
     # ساخت داده‌های PayPal
     paypal_data = {
         'cmd': '_xclick',
-        'business': 'your-paypal-sandbox-email@example.com',
+        'business': 'BeccomerceProject@gamil.com',
         'amount': sum_total,
         'item_name': f'Order #{order.id}',
         'invoice': str(uuid.uuid4()),
@@ -41,6 +41,41 @@ def user_basket():
                            order=order,
                            sum=sum_total,
                            paypal_data=paypal_data)
+
+
+@user_views.route('/remove-order-detail/', methods=['GET'])
+@login_required
+def remove_order_detail():
+    detail_id = request.args.get('detail_id')
+    if not detail_id:
+        return jsonify({'status': 'not_found_detail_id'})
+
+    detail = OrderDetail.query.filter_by(id=detail_id).join(Order).filter(
+        Order.is_paid == False,
+        Order.user_id == current_user.id
+    ).first()
+
+    if not detail:
+        return jsonify({'status': 'detail_not_found'})
+
+    db.session.delete(detail)
+    db.session.commit()
+
+    # get or create Order
+    current_order = Order.query.filter_by(user_id=current_user.id, is_paid=False).first()
+    if not current_order:
+        current_order = Order(user_id=current_user.id)
+        db.session.add(current_order)
+        db.session.commit()
+
+    total_amount = current_order.calculate_total_price()
+
+    html_body = render_template('user_panel_module/user_basket_content.html', order=current_order, sum=total_amount)
+
+    return jsonify({
+        'status': 'success',
+        'body': html_body
+    })
 
 
 @user_views.route('/')
