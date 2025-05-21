@@ -1,12 +1,46 @@
+import os
+import uuid
 from flask import render_template, Blueprint, redirect, request, url_for, flash
 from flask_login import login_required, current_user, logout_user
 from werkzeug.utils import secure_filename
-import os
 
-from .forms import EditProfileForm, ChangePasswordForm
 from extensions import db
+from order_module.models import Order
+from .forms import EditProfileForm, ChangePasswordForm
 
 user_views = Blueprint('user_views', __name__, template_folder='templates')
+
+
+@user_views.route('/user-basket')
+@login_required
+def user_basket():
+    user = current_user
+    # فرض می‌کنیم تابع زیر سفارش باز فعلی را می‌دهد:
+    order = Order.query.filter_by(user_id=user.id, is_paid=False).first()
+
+    if not order or not order.orderdetail_set:
+        return render_template('user_panel_module/user_basket.html', order=None)
+
+    # مجموع قیمت‌ها
+    sum_total = order.calculate_total_price()
+
+    # ساخت داده‌های PayPal
+    paypal_data = {
+        'cmd': '_xclick',
+        'business': 'your-paypal-sandbox-email@example.com',
+        'amount': sum_total,
+        'item_name': f'Order #{order.id}',
+        'invoice': str(uuid.uuid4()),
+        'currency_code': 'USD',
+        # 'return': url_for('payment_success_page', _external=True),
+        # 'cancel_return': url_for('payment_failure_page', _external=True),
+        # 'notify_url': url_for('paypal_ipn', _external=True)
+    }
+
+    return render_template('user_panel_module/user_basket.html',
+                           order=order,
+                           sum=sum_total,
+                           paypal_data=paypal_data)
 
 
 @user_views.route('/')
