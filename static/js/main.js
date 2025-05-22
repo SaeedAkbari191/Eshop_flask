@@ -172,7 +172,7 @@ function removeOrderDetail(detailId) {
         if (response.status === 'success') {
             $('#order_detail_content').html(response.body);
         } else {
-            alert('test');
+            alert('invalid count');
         }
     })
 }

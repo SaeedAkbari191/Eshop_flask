@@ -96,6 +96,8 @@ def change_order_detail_count():
         return jsonify({'status': 'detail_not_found'})
 
     if state == 'increase':
+        if order_detail.count >= 12:
+            return jsonify({'status': 'state_invalid'})
         order_detail.count += 1
         db.session.commit()
     elif state == 'decrease':
