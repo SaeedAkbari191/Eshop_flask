@@ -69,12 +69,62 @@ def remove_order_detail():
         db.session.commit()
 
     total_amount = current_order.calculate_total_price()
-
     html_body = render_template('user_panel_module/user_basket_content.html', order=current_order, sum=total_amount)
 
     return jsonify({
         'status': 'success',
         'body': html_body
+    })
+
+
+@user_views.route('/change-order-detail/', methods=['GET'])
+@login_required
+def change_order_detail_count():
+    detail_id = request.args.get('detail_id')
+    state = request.args.get('state')
+
+    if not detail_id or not state:
+        return jsonify({'status': 'not_found_detail_id_or_state'})
+
+    order_detail = OrderDetail.query.join(Order).filter(
+        OrderDetail.id == detail_id,
+        Order.user_id == current_user.id,
+        Order.is_paid == False
+    ).first()
+
+    if not order_detail:
+        return jsonify({'status': 'detail_not_found'})
+
+    if state == 'increase':
+        order_detail.count += 1
+        db.session.commit()
+    elif state == 'decrease':
+        if order_detail.count == 1:
+            db.session.delete(order_detail)
+        else:
+            order_detail.count -= 1
+        db.session.commit()
+    else:
+        return jsonify({'status': 'state_invalid'})
+
+    # get or create unpaid order
+    current_order = Order.query.filter_by(user_id=current_user.id, is_paid=False).first()
+    if not current_order:
+        current_order = Order(user_id=current_user.id)
+        db.session.add(current_order)
+        db.session.commit()
+
+    total_amount = current_order.calculate_total_price()
+
+    rendered_html = render_template(
+        'user_panel_module/user_basket_content.html',
+        order=current_order,
+        sum=total_amount
+    )
+
+    return jsonify({
+        'status': 'success',
+        'body': rendered_html
     })
 
 
