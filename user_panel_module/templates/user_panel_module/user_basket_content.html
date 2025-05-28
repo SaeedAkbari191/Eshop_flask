@@ -39,7 +39,7 @@
                                 </button>
                                 <input type="number" value="{{ detail.count }}" readonly/>
                                 <button class="increase"
-                                        onclick="changeOrderDetail({{ detail.id }},'increase')">+
+                                        onclick="changeOrderDetail({{ detail.id }}" >+
                                 </button>
                             </div>
                         </td>
@@ -81,14 +81,14 @@
                     </tr>
                 </table>
 
-                {% if paypal_data %}
+             {#   {% if paypal_data %}
                     <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
                         {% for key, value in paypal_data.items() %}
                             <input type="hidden" name="{{ key }}" value="{{ value }}">
                         {% endfor %}
                         <button type="submit" class="btn_cart">Proceed to Checkout</button>
                     </form>
-                {% endif %}
+                {% endif %}#}
             </div>
         </div>
     </main>

@@ -1,0 +1,46 @@
+{% extends 'user_panel_module/base.html' %}
+
+{% block title %}
+    Shopping Details
+{% endblock %}
+
+{% block content %}
+    <header class="dashboard-header">
+        <h1>Purchased Products</h1>
+        <p class="purchase-count">You have {{ orders.orderdetail_set.count() }} purchased items</p>
+    </header>
+
+    <!-- Purchased Products List -->
+    <div class="products-list">
+        <!-- Product Item 1 -->
+        {% for detail in orders.orderdetail_set %}
+            <div class="product-card">
+
+                <div class="product-image">
+                    <img src="{{ url_for('p_views.get_image', filename=detail.product.image1) }}" alt="Xbox Controller">
+                    <span class="purchase-badge">Purchased</span>
+                </div>
+                <div class="product-details">
+                    <h3 class="product-title">{{ detail.product.title }}</h3>
+
+                    <div class="product-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span class="purchase-date">{{ detail.count }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-tag"></i>
+                            <span class="product-price">${{ detail.total_price() }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-box-open"></i>
+                            <span class="delivery-status">Delivered</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        {% endfor %}
+    </div>
+
+{% endblock %}

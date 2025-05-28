@@ -1,7 +1,7 @@
 import os
 import uuid
-from flask import render_template, Blueprint, redirect, request, url_for, flash, jsonify
-from flask_login import login_required, current_user, logout_user
+from flask import render_template, Blueprint, redirect, request, url_for, flash, jsonify, abort
+from flask_login import login_required, current_user, logout_user, login_url
 from werkzeug.utils import secure_filename
 
 from extensions import db
@@ -11,36 +11,46 @@ from .forms import EditProfileForm, ChangePasswordForm
 user_views = Blueprint('user_views', __name__, template_folder='templates')
 
 
+@user_views.route('/my-shopping/')
+@login_required
+def my_shopping_page():
+    orders = Order.query.filter_by(user_id=current_user.id, is_paid=True).all()
+    return render_template('user_panel_module/user_shopping.html', order_list=orders)
+
+
+@user_views.route('/my-shopping-details/<int:order_id>')
+@login_required
+def my_shopping_details(order_id):
+    order = Order.query.filter_by(id=order_id, user_id=current_user.id).first()
+    if order is None:
+        abort(404, description="Not Found")
+    return render_template('user_panel_module/user_shopping_details.html', orders=order)
+
+
 @user_views.route('/user-basket')
 @login_required
 def user_basket():
-    user = current_user
-    # فرض می‌کنیم تابع زیر سفارش باز فعلی را می‌دهد:
-    order = Order.query.filter_by(user_id=user.id, is_paid=False).first()
+    # دریافت یا ایجاد سفارش پرداخت‌نشده
+    current_order = Order.query.filter_by(user_id=current_user.id, is_paid=False).first()
+    if not current_order:
+        current_order = Order(user_id=current_user.id, is_paid=False)
+        db.session.add(current_order)
+        db.session.commit()
 
-    if not order or not order.orderdetail_set:
-        return render_template('user_panel_module/user_basket.html', order=None)
+    total_amount = current_order.calculate_total_price()
 
-    # مجموع قیمت‌ها
-    sum_total = order.calculate_total_price()
+    return render_template('user_panel_module/user_basket.html', order=current_order, sum=total_amount,
+                           )
 
-    # ساخت داده‌های PayPal
-    paypal_data = {
-        'cmd': '_xclick',
-        'business': 'BeccomerceProject@gamil.com',
-        'amount': sum_total,
-        'item_name': f'Order #{order.id}',
-        'invoice': str(uuid.uuid4()),
-        'currency_code': 'USD',
-        # 'return': url_for('payment_success_page', _external=True),
-        # 'cancel_return': url_for('payment_failure_page', _external=True),
-        # 'notify_url': url_for('paypal_ipn', _external=True)
-    }
 
-    return render_template('user_panel_module/user_basket.html',
-                           order=order,
-                           sum=sum_total,
-                           paypal_data=paypal_data)
+@user_views.route('payment-success/')
+def payment_success_page():
+    return render_template('user_panel_module/payment_success.html', order=None)
+
+
+@user_views.route('payment-failure/')
+def payment_failure_page():
+    return render_template('user_panel_module/payment_failure.html', order=None)
 
 
 @user_views.route('/remove-order-detail/', methods=['GET'])
@@ -131,6 +141,7 @@ def change_order_detail_count():
 
 
 @user_views.route('/')
+@login_required
 def user():
     return render_template('user_panel_module/user_panel_dashboard_page.html')
 

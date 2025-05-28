@@ -5,6 +5,7 @@ from extensions import db
 from sqlalchemy import func
 from product_module.models import ProductCategory, Product, ProductVisit
 from site_module.models import Slider, SiteSetting, SiteBanner, SiteBannerPosition
+from order_module.models import Order, OrderDetail
 
 views = Blueprint('views', __name__, template_folder='templates')
 
@@ -27,6 +28,18 @@ def home():
     )
     most_visit_product = [item[0] for item in most_visit_product]
 
+    most_bought_products = (
+        Product.query
+        .join(OrderDetail, Product.id == OrderDetail.product_id)
+        .join(Order, OrderDetail.order_id == Order.id)
+        .filter(Order.is_paid == True)
+        .with_entities(Product, func.sum(OrderDetail.count).label('order_count'))
+        .group_by(Product.id)
+        .order_by(func.sum(OrderDetail.count).desc())
+        .limit(12)
+        .all()
+    )
+
     context = {
         'sliders': sliders,
         'main_categories': main_categories,
@@ -35,6 +48,7 @@ def home():
         'bottom_banners': banners[5:8],
         'products': products,
         'most_visit_product': most_visit_product,
+        'most_bought_product': most_bought_products,
     }
     return render_template('home_module/index_page.html', **context)
 

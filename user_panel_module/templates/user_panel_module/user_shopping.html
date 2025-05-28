@@ -1,0 +1,39 @@
+{% extends 'user_panel_module/base.html' %}
+
+{% block title %}
+    Shopping Cart
+{% endblock %}
+
+{% block content %}
+    <header class="dashboard-header">
+        <h1>Order History</h1>
+        <p class="orders-count">5 orders found</p>
+    </header>
+
+    <!-- Orders Table -->
+    <div class="orders-table">
+        <!-- Table Header -->
+        <div class="table-header">
+            <div class="col order-id">Order ID</div>
+            <div class="col total-price">Total Amount</div>
+            <div class="col order-date">Order Date</div>
+            <div class="col actions">Actions</div>
+        </div>
+
+        <!-- Order Item -->
+        {% for order in order_list %}
+            <div class="order-item">
+                <div class="col order-id">{{ order.id }}</div>
+                <div class="col total-price">${{ order.calculate_total_price() }}</div>
+                <div class="col order-date">{{ order.payment_date }}</div>
+                <div class="col actions">
+                    <a href="{{ url_for('user_views.my_shopping_details',order_id=order.id) }}" class="details-btn">
+                        Details
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+
+
+    </div>
+{% endblock %}

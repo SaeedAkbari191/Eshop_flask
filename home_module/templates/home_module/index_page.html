@@ -17,8 +17,10 @@
                 <div class="swiper-wrapper">
                     {% for slider in sliders %}
                         <div class="swiper-slide">
-                            <a href="#"><img src="{{ url_for('setting_views.get_image',filename=slider.image) }}"
-                                             alt="" loading="lazy"></a>
+                            <a href="#">
+                                <img src="{{ url_for('setting_views.get_image',filename=slider.image) }}" alt=""
+                                     loading="lazy">
+                            </a>
                         </div>
                     {% endfor %}
                 </div>
@@ -126,10 +128,7 @@
                 <div class="top_slide">
                     <h2>Trending <span>product</span></h2>
                 </div>
-
                 <div id="swiper_items_sale" class="products swiper-wrapper">
-
-
                     {% for product in most_visit_product %}
                         {% include 'includes/products_items_partial.html' %}
                     {% endfor %}
@@ -140,7 +139,22 @@
         </div>
     </section>
 
-
+    <section class="slide slide_sale">
+        <div class="containeres">
+            <div class="sale_sec mySwiper">
+                <div class="top_slide">
+                    <h2>Best <span>Sellers</span></h2>
+                </div>
+                <div id="swiper_items_sale" class="products swiper-wrapper">
+                    {% for product ,order_count in most_bought_product %}
+                        {% include 'includes/products_items_partial.html' %}
+                    {% endfor %}
+                </div>
+                <div class="swiper-button-next btn_Swip"></div>
+                <div class="swiper-button-prev btn_Swip"></div>
+            </div>
+        </div>
+    </section>
 
 
     {#   LAST BANNER#}
